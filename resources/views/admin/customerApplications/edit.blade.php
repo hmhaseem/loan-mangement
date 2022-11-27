@@ -25,7 +25,7 @@
                     <div class="step" data-target="#personal-info-validation">
                         <button type="button" class="step-trigger">
                             <span class="bs-stepper-circle">
-                                <i class="bx bx-user"></i>
+                                <i class='bx bxs-bank'></i>
                             </span>
                             <span class="bs-stepper-label mt-1">
                                 <span class="bs-stepper-title">Bank Details</span>
@@ -37,7 +37,7 @@
                     <div class="step" data-target="#social-links-validation">
                         <button type="button" class="step-trigger">
                             <span class="bs-stepper-circle">
-                                <i class="bx bxl-instagram"></i>
+                                <i class='bx bx-store-alt'></i>
                             </span>
                             <span class="bs-stepper-label mt-1">
                                 <span class="bs-stepper-title">Family Income </span>
@@ -74,8 +74,11 @@
                                     <label class="required form-label" for="gender">Gender </label>
                                     <select name="gender" class="form-control select2" id="gender">
                                         <option value="0">Select Gender </option>
-                                        <option value="male">Male </option>
-                                        <option value="female">Female </option>
+                                        <option value="male"
+                                            {{ $customerApplication->gender === 'male' ? 'selected' : '' }}>Male </option>
+                                        <option value="female"
+                                            {{ $customerApplication->gender === 'female' ? 'selected' : '' }}>Female
+                                        </option>
                                     </select>
                                     @if ($errors->has('gender'))
                                         <div class="invalid-feedback">
@@ -105,7 +108,8 @@
                                 <div class="col-sm-6">
                                     <label class="required form-label" for="nic">Nic</label>
                                     <input class="form-control {{ $errors->has('nic') ? 'is-invalid' : '' }}"
-                                        type="text" name="nic" id="nic" value="{{ old('nic', $customerApplication->nic) }}" required>
+                                        type="text" name="nic" id="nic"
+                                        value="{{ old('nic', $customerApplication->nic) }}" required>
                                     @if ($errors->has('nic'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('nic') }}
@@ -116,8 +120,8 @@
                                 <div class="col-sm-6">
                                     <label class="required form-label" for="name">Address</label>
                                     <input class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}"
-                                        type="text" name="address" id="address" value="{{ old('address', $customerApplication->address) }}"
-                                        required>
+                                        type="text" name="address" id="address"
+                                        value="{{ old('address', $customerApplication->address) }}" required>
 
                                     @if ($errors->has('address'))
                                         <div class="invalid-feedback">
@@ -129,7 +133,8 @@
                                 <div class="col-sm-6">
                                     <label for="address2 " class="form-label">Address 2 (Optional)</label>
                                     <input class="form-control {{ $errors->has('address2') ? 'is-invalid' : '' }}"
-                                        type="text" name="address2" id="address2" value="{{ old('address2', $customerApplication->address) }}">
+                                        type="text" name="address2" id="address2"
+                                        value="{{ old('address2', $customerApplication->address) }}">
 
                                     @if ($errors->has('address2'))
                                         <div class="invalid-feedback">
@@ -141,8 +146,8 @@
                                 <div class="col-sm-6">
                                     <label class="required form-label" for="city">City</label>
                                     <input class="form-control {{ $errors->has('city') ? 'is-invalid' : '' }}"
-                                        type="text" name="city" id="city" value="{{ old('city', $customerApplication->city) }}"
-                                        required>
+                                        type="text" name="city" id="city"
+                                        value="{{ old('city', $customerApplication->city) }}" required>
 
                                     @if ($errors->has('city'))
                                         <div class="invalid-feedback">
@@ -154,8 +159,8 @@
                                 <div class="col-sm-6">
                                     <label class="required form-label" for="phone">Phone</label>
                                     <input class="form-control {{ $errors->has('phone') ? 'is-invalid' : '' }}"
-                                        type="text" name="phone" id="phone" value="{{ old('phone', $customerApplication->phone) }}"
-                                        required maxlength="10">
+                                        type="text" name="phone" id="phone"
+                                        value="{{ old('phone', $customerApplication->phone) }}" required maxlength="10">
                                     @if ($errors->has('phone'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('phone') }}
@@ -167,10 +172,12 @@
                                     <label class="required form-label" for="married_status">Married Status</label>
                                     <select name="married_status" class="form-control select2">
                                         <option value="single"> Single </option>
-                                        <option value="married">
+                                        <option value="married"
+                                            {{ $customerApplication->married_status === 'married' ? 'selected' : '' }}>
                                             Married
                                         </option>
-                                        <option value="divorced">
+                                        <option value="divorced"
+                                            {{ $customerApplication->married_status === 'divorced' ? 'selected' : '' }}>
                                             Divorced
                                         </option>
                                     </select>
@@ -184,7 +191,8 @@
                                 <div class="col-sm-6">
                                     <label for="name" class=" form-label">Email</label>
                                     <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
-                                        type="email" name="email" id="email" value="{{ old('email', $customerApplication->email) }}">
+                                        type="email" name="email" id="email"
+                                        value="{{ old('email', $customerApplication->email) }}">
                                     @if ($errors->has('email'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('email') }}
@@ -195,12 +203,18 @@
                                 <div class="col-sm-6">
                                     <label class="required form-label" for="nic_photo">Nic / Driving licence
                                         (Front)</label>
-                                    <input type="file" class="form-control" name="nic_photo" id="nic_photo" />
+                                    <input type="file" class="form-control" name="nic_photo" id="nic_photo"
+                                        value="{{ $customerApplication->nic_photo }}" />
+                                    <img src="{{ asset('uploads') }}/{{ $customerApplication->nic_photo }}"
+                                        width="100" />
                                 </div>
 
                                 <div class="col-sm-6">
                                     <label class="required form-label" for="nic_back">Nic / Driving licence (Back)</label>
-                                    <input type="file" class="form-control" name="nic_back" id="nic_back" />
+                                    <input type="file" class="form-control" name="nic_back" id="nic_back"
+                                        value="{{ $customerApplication->nic_photo }}" />
+                                    <img src="{{ asset('uploads') }}/{{ $customerApplication->nic_back }}"
+                                        width="100" />
                                 </div>
 
 
@@ -436,10 +450,11 @@
                                 extension: 'jpeg,gif,png',
                                 type: 'image/jpeg,image/gif,image/png',
                                 message: 'Please choose a jpeg/png/gif file format',
-                            },
-                            notEmpty: {
-                                message: 'The nic front image is required'
                             }
+                            // ,
+                            // notEmpty: {
+                            //     message: 'The nic front image is required'
+                            // }
                         },
 
                     },
@@ -449,10 +464,11 @@
                                 extension: 'jpeg,gif,png',
                                 type: 'image/jpeg,image/gif,image/png',
                                 message: 'Please choose a jpeg/png/gif file format',
-                            },
-                            notEmpty: {
-                                message: 'The nic back image is required'
                             }
+                          //  ,
+                            // notEmpty: {
+                            //     message: 'The nic back image is required'
+                            // }
                         },
 
                     },
