@@ -136,3 +136,14 @@ div#basicData {
     margin-top: 40px;
     margin-bottom: 40px;
 }
+
+.ptb-10{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+.no-records{
+    color: red;
+    margin-bottom: 0 !important;
+}

@@ -84,6 +84,15 @@
             </a>
         </li>
         @endcan
+        @can('payments_access')
+        <li class="menu-item {{ request()->is('admin/payments') || request()->is('admin/payments/*') ? 'active' : '' }}">
+            <a href="{{ route("admin.payments.index") }}" class="menu-link ">
+                <i class="menu-icon tf-icons bx bx-notepad"></i>
+
+                <div data-i18n="Analytics"> Payment</div>
+            </a>
+        </li>
+        @endcan
         @can('loan_application_access')
         <li class="menu-item {{ request()->is('admin/loan-applications') || request()->is('admin/loan-applications/*') ? 'active' : '' }}">
             <a href="{{ route("admin.loan-applications.index") }}" class="menu-link ">

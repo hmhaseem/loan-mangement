@@ -44,6 +44,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Customer Applications
     Route::resource('customer-applications', 'CustomerApplicationsController');
 
+    //Payment
+    Route::resource('payments', 'PaymentsController');
+
     // Comments
     Route::delete('comments/destroy', 'CommentsController@massDestroy')->name('comments.massDestroy');
     Route::resource('comments', 'CommentsController');

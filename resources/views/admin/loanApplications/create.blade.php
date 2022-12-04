@@ -6,6 +6,10 @@
         </div>
 
 
+
+
+
+
         <div class="col-12 mb-4">
 
 
@@ -34,6 +38,16 @@
                         </div>
 
                     </div>
+                    @if (Session::has('success'))
+                        <div class="alert alert-success" role="alert">
+                            {{ Session::get('success') }}
+                        </div>
+                    @elseif(Session::has('warning'))
+                        <div class="alert alert-warning" role="alert">
+                            {{ Session::get('warning') }}... !
+                        </div>
+                        <!-- here to 'withWarning()' -->
+                    @endif
                     <div class="no-result">No data found</div>
                     <div class="row g-3" id="basicData">
                         <div class="col-sm-6">
@@ -135,7 +149,7 @@
                 <hr class="hr-tag" />
                 <!-- Social Links -->
                 <div id="social-links-vertical" class="content">
-                    <form method="POST" action="{{ route('admin.loan-applications.store') }}" >
+                    <form method="POST" action="{{ route('admin.loan-applications.store') }}">
 
                         @csrf
                         <div class="row g-3">
@@ -162,7 +176,7 @@
                                 <select name="term_type" class="form-control select2" id="term_type">
                                     <option value="0">Select Type </option>
                                     @foreach ($loanTypes as $loanTypes)
-                                        <option value="{{ $loanTypes->id }}"
+                                        <option value="{{ $loanTypes->product_name }}"
                                             data-interest="{{ $loanTypes->interest_rate }}">
                                             {{ $loanTypes->product_name }} </option>
                                     @endforeach
@@ -214,7 +228,7 @@
                             </div>
 
                             <div class="col-sm-6">
-                                <label class="required form-label" for="weekly_pay">Weekly Pay</label>
+                                <label class="required form-label" for="weekly_pay">Weekly / Monthly Pay</label>
                                 <input class="form-control {{ $errors->has('weekly_pay') ? 'is-invalid' : '' }}" readonly
                                     type="number" name="weekly_pay" id="weekly_pay"
                                     value="{{ old('weekly_pay', '') }}" step="0.01" required>
@@ -237,7 +251,7 @@
                             </div>
 
                             <div class="col-12 d-flex justify-content-between">
-                                  
+
                                 <button class="btn btn-success btn-submit" type="submit">Submit</button>
                             </div>
                     </form>

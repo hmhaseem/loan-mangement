@@ -8,6 +8,7 @@ use App\Traits\MultiTenantModelTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \DateTimeInterface;
+use Faker\Provider\ar_SA\Payment;
 
 class LoanApplication extends Model
 {
@@ -26,6 +27,7 @@ class LoanApplication extends Model
         'analyst_id',
         'cfo_id',
         'loan_term',
+        'term_type',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -59,7 +61,10 @@ class LoanApplication extends Model
         return $this->belongsTo(Status::class, 'status_id');
     }
 
-
+    public function payments()
+    {
+        return $this->hasMany(Payments::class,'loan_id');
+    }
 
 
     public function customer()

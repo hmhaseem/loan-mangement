@@ -19,6 +19,7 @@ use App\IncomeType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use DB;
 
 class LoanApplicationsController extends Controller
 {
@@ -26,7 +27,12 @@ class LoanApplicationsController extends Controller
     {
         abort_if(Gate::denies('loan_application_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $loanApplications = LoanApplication::with('status', 'analyst', 'cfo')->get();
+        //  $loanApplications = LoanApplication::with('status', 'analyst', 'cfo')->get();
+        $loanApplications = LoanApplication::with('status', 'analyst', 'cfo', 'customer')
+            // ->rightJoin('customer_applications', 'customer_applications.id', '=', 'loan_applications.customer_id')
+            // ->rightJoin('bank', 'bank.id', '=', 'customer_applications.bank_id')
+            // ->select('customer_applications.*', 'loan_applications.*', 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
+            ->get();
         $defaultStatus    = Status::find(1);
         $user             = auth()->user();
 
@@ -50,15 +56,21 @@ class LoanApplicationsController extends Controller
     {
         $date = Carbon::now();
         $requestData = $request->all();
-       
+        $data =   LoanApplication::where('customer_applications.id', '=', $request->customer_id)
+            ->rightJoin('customer_applications', 'customer_applications.id', '=', 'loan_applications.customer_id')
+            ->rightJoin('bank', 'bank.id', '=', 'customer_applications.bank_id')
+            ->rightJoin('statuses', 'statuses.id', '=', 'loan_applications.status_id')
+            ->select('customer_applications.*', 'loan_applications.*', 'statuses.name as status*', 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
+            ->first();
 
-     // dd($requestData);
-           
-       
-     
-        $loanApplication = LoanApplication::create($requestData);
+        if ($data->status == "Closed" || $data->status == null) {
+            $loanApplication = LoanApplication::create($requestData);
 
-        return redirect()->route('admin.loan-applications.index');
+            return redirect()->route('admin.loan-applications.index')->withSuccess("Loan Created successfully");
+        } else {
+            return \Redirect::back()->withWarning('This id already have a loans');
+            //  return redirect()->route('admin.loan-applications.index')->with("Already have a pending loan neet to settle the arreast");
+        }
     }
 
     public function edit(LoanApplication $loanApplication)
@@ -84,7 +96,7 @@ class LoanApplicationsController extends Controller
 
     public function update(UpdateLoanApplicationRequest $request, LoanApplication $loanApplication)
     {
-        $loanApplication->update($request->only('loan_amount', 'description', 'status_id'));
+        $loanApplication->update($request->all());
 
         return redirect()->route('admin.loan-applications.index');
     }
@@ -172,7 +184,13 @@ class LoanApplicationsController extends Controller
             '403 Forbidden'
         );
 
-        return view('admin.loanApplications.analyze', compact('loanApplication'));
+        $customerDetails = LoanApplication::where('loan_applications.id', '=', $loanApplication->id)
+            ->rightJoin('customer_applications', 'customer_applications.id', '=', 'loan_applications.customer_id')
+            ->rightJoin('bank', 'bank.id', '=', 'customer_applications.bank_id')
+            ->select('customer_applications.*', 'loan_applications.*', 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
+            ->first();
+
+        return view('admin.loanApplications.analyze', compact('loanApplication', 'customerDetails'));
     }
 
     public function analyze(Request $request, LoanApplication $loanApplication)
@@ -212,14 +230,18 @@ class LoanApplicationsController extends Controller
         );
 
         $nic = $request['nic'];
-      //   $customerDetails = CustomerApplication::where('nic', '=', $nic)->bank()->get();
+        //   $customerDetails = CustomerApplication::where('nic', '=', $nic)->bank()->get();
         $customerDetails = CustomerApplication::where('nic', '=', $nic)
-        ->rightJoin('bank', 'bank.id', '=', 'customer_applications.bank_id')
-       
-        ->select('customer_applications.*', 'bank.name as bank_name', 'bank.account_no as bank_account_no','bank.remarks as remarks','bank.branch as branch')
-         ->first();
+            ->rightJoin('bank', 'bank.id', '=', 'customer_applications.bank_id')
+            ->rightJoin('loan_applications', 'loan_applications.id', '=', 'loan_applications.customer_id')
+            ->rightJoin('payments', 'loan_applications.id', '=', 'payments.loan_id')
+            ->select('customer_applications.*', 'loan_applications.*', 'loan_applications.id as loanId', DB::raw("group_concat(payments.payment_amount) as paymentList"), 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
+            ->first()->toArray();
 
-       
-        return response()->json(array('data' => $customerDetails), 200);
+        if (!is_null($customerDetails['id'])) {
+            return response()->json(array('data' => $customerDetails, 'message' => 'retrived list', 'status' => 'true'), 200);
+        } else {
+            return response()->json(array('data' => [], 'status' => 'false'), 200);
+        }
     }
 }
