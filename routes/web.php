@@ -46,6 +46,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     //Payment
     Route::resource('payments', 'PaymentsController');
+    Route::post('paymentsfind', 'PaymentsController@getDetailsByNic')->name('payments.find');
 
     // Comments
     Route::delete('comments/destroy', 'CommentsController@massDestroy')->name('comments.massDestroy');
@@ -56,6 +57,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('settings', 'SettingsController@store')->name('settings.store');
     Route::get('settings-income-type', 'SettingsController@income')->name('settings.income');
     Route::post('settings-income-type', 'SettingsController@incomeStore')->name('settings.income.store');
+    Route::get('charges', 'SettingsController@charges')->name('settings.charges');
+    Route::post('charges', 'SettingsController@chargesStore')->name('settings.charges.store');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

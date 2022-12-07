@@ -21,7 +21,7 @@
                 <span class="help-block">{{ trans('cruds.status.fields.name_helper') }}</span>
             </div>
             <div class="form-group">
-                <button class="btn btn-danger" type="submit">
+                <button class="btn btn-danger mt-10" type="submit">
                     {{ trans('global.save') }}
                 </button>
             </div>

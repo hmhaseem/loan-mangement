@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Charges;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
 use App\Http\Requests\StoreUserRequest;
@@ -70,6 +71,29 @@ class SettingsController extends Controller
         foreach ($request->row as $row) {
             IncomeType::create($row);
         }
+
+        return back()->with('success', 'Income has been added.');
+    }
+
+    public function charges()
+    {
+        abort_if(Gate::denies('settings_cahrges_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $settings = Charges::first();
+      /// dd($settings);
+        return view('admin.settings.settings-charges', compact('settings'));
+    }
+
+    public function chargesStore(Request $request)
+    {
+
+        abort_if(Gate::denies('settings_cahrges_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $request->validate([
+            'insurance_charge' => 'required',
+            'document_charge' => 'required',
+        ]);
+
+        Charges::create($request->all());
+
 
         return back()->with('success', 'Income has been added.');
     }

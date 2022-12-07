@@ -405,8 +405,8 @@
                     nic_photo: {
                         validators: {
                             file: {
-                                extension: 'jpeg,gif,png',
-                                type: 'image/jpeg,image/gif,image/png',
+                                extension: 'jpeg,gif,png,jpg',
+                                type: 'image/jpeg,image/gif,image/png,image/jpg',
                                 message: 'Please choose a jpeg/png/gif file format',
                             },
                             notEmpty: {
@@ -418,8 +418,8 @@
                     nic_back: {
                         validators: {
                             file: {
-                                extension: 'jpeg,gif,png',
-                                type: 'image/jpeg,image/gif,image/png',
+                                extension: 'jpeg,gif,png,jpg',
+                                type: 'image/jpeg,image/gif,image/png,image/jpg',
                                 message: 'Please choose a jpeg/png/gif file format',
                             },
                             notEmpty: {

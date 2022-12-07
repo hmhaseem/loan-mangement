@@ -33,6 +33,8 @@ class LoanApplicationsController extends Controller
             // ->rightJoin('bank', 'bank.id', '=', 'customer_applications.bank_id')
             // ->select('customer_applications.*', 'loan_applications.*', 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
             ->get();
+
+     
         $defaultStatus    = Status::find(1);
         $user             = auth()->user();
 
@@ -56,14 +58,15 @@ class LoanApplicationsController extends Controller
     {
         $date = Carbon::now();
         $requestData = $request->all();
-        $data =   LoanApplication::where('customer_applications.id', '=', $request->customer_id)
+        $data =   LoanApplication::where('loan_applications.customer_id', '=', $request->customer_id)
             ->rightJoin('customer_applications', 'customer_applications.id', '=', 'loan_applications.customer_id')
             ->rightJoin('bank', 'bank.id', '=', 'customer_applications.bank_id')
             ->rightJoin('statuses', 'statuses.id', '=', 'loan_applications.status_id')
             ->select('customer_applications.*', 'loan_applications.*', 'statuses.name as status*', 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
             ->first();
 
-        if ($data->status == "Closed" || $data->status == null) {
+
+        if ($data['status'] == "Payment Completed" || $data['status'] == null) {
             $loanApplication = LoanApplication::create($requestData);
 
             return redirect()->route('admin.loan-applications.index')->withSuccess("Loan Created successfully");
@@ -97,7 +100,6 @@ class LoanApplicationsController extends Controller
     public function update(UpdateLoanApplicationRequest $request, LoanApplication $loanApplication)
     {
         $loanApplication->update($request->all());
-
         return redirect()->route('admin.loan-applications.index');
     }
 
@@ -231,12 +233,11 @@ class LoanApplicationsController extends Controller
 
         $nic = $request['nic'];
         //   $customerDetails = CustomerApplication::where('nic', '=', $nic)->bank()->get();
-        $customerDetails = CustomerApplication::where('nic', '=', $nic)
+        $customerDetails = CustomerApplication::where("customer_applications.nic", "=", $nic)
             ->rightJoin('bank', 'bank.id', '=', 'customer_applications.bank_id')
-            ->rightJoin('loan_applications', 'loan_applications.id', '=', 'loan_applications.customer_id')
-            ->rightJoin('payments', 'loan_applications.id', '=', 'payments.loan_id')
-            ->select('customer_applications.*', 'loan_applications.*', 'loan_applications.id as loanId', DB::raw("group_concat(payments.payment_amount) as paymentList"), 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
-            ->first()->toArray();
+
+            ->select('customer_applications.*', 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
+            ->first();
 
         if (!is_null($customerDetails['id'])) {
             return response()->json(array('data' => $customerDetails, 'message' => 'retrived list', 'status' => 'true'), 200);

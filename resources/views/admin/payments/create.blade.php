@@ -148,7 +148,7 @@
                 </div>
                 <hr class="hr-tag" />
                 <!-- Social Links -->
-                <div id="social-links-vertical" class="content">
+                <div id="paymentsSubmitDetails" class="content">
                     <form method="POST" action="{{ route('admin.payments.store') }}">
 
                         @csrf
@@ -203,6 +203,7 @@
         $("#paymentDetails").hide();
         $(".spinner-border").hide();
 
+        $("#paymentsSubmitDetails").hide();
         $(".no-result").hide();
 
         $(document).ready(function() {
@@ -228,8 +229,8 @@
                 }
             });
             let nic = $("#nic").val();
-            var base_path = '{{ url('/admin/loan-applications-find') }}';
-            console.log(base_path)
+            var base_path = '{{ url('/admin/paymentsfind') }}';
+             
             $.ajax({
                 url: base_path,
                 type: "POST",
@@ -245,10 +246,10 @@
                     $(".search-icon").show();
                     console.log(dataResult);
                     if (dataResult.status === 'true') {
+                        $("#paymentsSubmitDetails").fadeIn();
                         $("#paymentDetails").fadeIn();
                         $(".no-result").hide();
                         let resultData = dataResult.data;
-
                         $("#name").text(resultData.name);
                         $("#gender").text(resultData.gender);
                         $("#email").text(resultData.email);

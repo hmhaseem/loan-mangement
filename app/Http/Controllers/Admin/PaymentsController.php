@@ -20,6 +20,7 @@ use App\Payments;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use DB;
 
 class PaymentsController extends Controller
 {
@@ -56,25 +57,29 @@ class PaymentsController extends Controller
         $loanApplication = $request['loan_id'];
 
         $loan =   LoanApplication::whereId($loanApplication)->with('payments')->first();
-        $total = 0;
-        foreach ($loan->payments as $payment) {
-            $total += $payment->payment_amount;
-        }
-        $balance = $loan->loan_amount - $total;
-        if ($balance == 0 && $balance) {
-            $loan->update([
-                'status_id' => 10
-            ]);
-        }
-        if ($balance) {
+        if ($loan) {
+            $total = 0;
+            foreach ($loan->payments as $payment) {
+                $total += $payment->payment_amount;
+            }
+            $balance = $loan->loan_amount - $total;
+            if ($balance == 0 && $balance) {
+                $loan->update([
+                    'status_id' => 10
+                ]);
+            }
+            if ($balance) {
 
-            $payments = Payments::create($requestData);
+                $payments = Payments::create($requestData);
 
-            return redirect()->back()->with('success', 'Payment Added !');
+                return redirect()->back()->with('success', 'Payment Added !');
+            } else {
+                // $payments = Payments::create($requestData);
+
+                return redirect()->back()->with('warning', 'All the payment compeleted / no balance !');
+            }
         } else {
-            $payments = Payments::create($requestData);
-
-            return redirect()->back()->with('warning', 'All the payment completd / no balance !');
+            return redirect()->back()->with('warning', 'TThere is no record found');
         }
     }
 
@@ -127,5 +132,28 @@ class PaymentsController extends Controller
         LoanApplication::whereIn('id', request('ids'))->delete();
 
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+    public function getDetailsByNic(Request $request)
+    {
+        abort_if(
+            Gate::denies('loan_application_access'),
+            Response::HTTP_FORBIDDEN,
+            '403 Forbidden'
+        );
+
+        $nic = $request['nic'];
+        //   $customerDetails = CustomerApplication::where('nic', '=', $nic)->bank()->get();
+        $customerDetails = CustomerApplication::where('customer_applications.nic', '=', $nic)
+            ->rightJoin('bank', 'bank.id', '=', 'customer_applications.bank_id')
+            ->rightJoin('loan_applications', 'loan_applications.id', '=', 'loan_applications.customer_id')
+            ->rightJoin('payments', 'loan_applications.id', '=', 'payments.loan_id')
+            ->select('customer_applications.*', 'loan_applications.*', 'loan_applications.id as loanId', DB::raw("group_concat(payments.payment_amount) as paymentList"), 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
+            ->first()->toArray();
+
+        if (!is_null($customerDetails['id'])) {
+            return response()->json(array('data' => $customerDetails, 'message' => 'retrived list', 'status' => 'true'), 200);
+        } else {
+            return response()->json(array('data' => [], 'status' => 'false'), 200);
+        }
     }
 }

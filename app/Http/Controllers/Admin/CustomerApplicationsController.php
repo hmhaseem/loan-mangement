@@ -54,7 +54,7 @@ class CustomerApplicationsController extends Controller
             $randomize = rand(111111, 999999);
             $extension = $request->file('nic_photo')->getClientOriginalExtension();
             $filenameFront = $randomize . '.' . $extension;
-            $request->nic_photo->move('uploads/', $filenameFront);
+            $request->nic_photo->move('public/uploads/', $filenameFront);
             $requestData['nic_photo'] = $filenameFront;
         }
 
@@ -62,7 +62,7 @@ class CustomerApplicationsController extends Controller
             $randomize = rand(111111, 999999);
             $extension = $request->file('nic_back')->getClientOriginalExtension();
             $filenameBackEnd = $randomize . '.' . $extension;
-            $request->nic_back->move('uploads/', $filenameBackEnd);
+            $request->nic_back->move('public/uploads/', $filenameBackEnd);
             $requestData['nic_back'] = $filenameBackEnd;
         }
 
@@ -96,16 +96,16 @@ class CustomerApplicationsController extends Controller
         }
         $statuses = Status::whereIn('id', [1, 8, 9])->pluck('name', 'id');
 
-        $customerApplication->load('status');
+        $customerApplication->load('status', 'bank');
 
         return view('admin.customerApplications.edit', compact('statuses', 'customerApplication', 'loanTypes', 'incomeTypes', 'loarnTerms'));
     }
 
-    public function update(UpdateLoanApplicationRequest $request, CustomerApplication $customerApplication)
+    public function update(StoreCustomerApplicationRequest $request, CustomerApplication $customerApplication)
     {
-        $customerApplication->update($request->only('loan_amount', 'description', 'status_id'));
+        $customerApplication->update($request->all());
 
-        return redirect()->route('admin.loan-applications.index');
+        return redirect()->route('admin.customer-applications.index');
     }
 
     public function show(CustomerApplication $customerApplication)

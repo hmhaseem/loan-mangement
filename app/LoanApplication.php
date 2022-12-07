@@ -12,7 +12,7 @@ use Faker\Provider\ar_SA\Payment;
 
 class LoanApplication extends Model
 {
-    use SoftDeletes, MultiTenantModelTrait, Auditable;
+    use SoftDeletes,Auditable;
 
     public $table = 'loan_applications';
 
@@ -63,7 +63,7 @@ class LoanApplication extends Model
 
     public function payments()
     {
-        return $this->hasMany(Payments::class,'loan_id');
+        return $this->hasMany(Payments::class, 'loan_id');
     }
 
 

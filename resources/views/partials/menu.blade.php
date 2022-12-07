@@ -17,7 +17,7 @@
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
         <li class="menu-item {{ request()->is('admin') || request()->is('admin') ? 'active' : '' }}">
-            <a href="{{ route("admin.home") }}" class="menu-link">
+            <a href="{{ route('admin.home') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
@@ -25,118 +25,127 @@
 
         <!-- Layouts -->
         @can('user_management_access')
-        <li class="menu-item {{ request()->is('admin/permissions') || request()->is('admin/permissions/*') ? 'active open' : '' }} {{ request()->is('admin/roles') || request()->is('admin/roles/*') ? 'active open' : '' }} {{ request()->is('admin/users') || request()->is('admin/users/*') ? 'active open' : '' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class='menu-icon tf-icons bx bx-user'></i>
-                <div data-i18n="Layouts">User Managment</div>
-            </a>
+            <li
+                class="menu-item {{ request()->is('admin/permissions') || request()->is('admin/permissions/*') ? 'active open' : '' }} {{ request()->is('admin/roles') || request()->is('admin/roles/*') ? 'active open' : '' }} {{ request()->is('admin/users') || request()->is('admin/users/*') ? 'active open' : '' }}">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class='menu-icon tf-icons bx bx-user'></i>
+                    <div data-i18n="Layouts">User Managment</div>
+                </a>
 
-            <ul class="menu-sub">
-                @can('permission_access')
-                <li class="menu-item {{ request()->is('admin/permissions') || request()->is('admin/permissions/*') ? 'active' : '' }}">
+                <ul class="menu-sub">
+                    @can('permission_access')
+                        <li
+                            class="menu-item {{ request()->is('admin/permissions') || request()->is('admin/permissions/*') ? 'active' : '' }}">
 
-                    <a href="{{ route("admin.permissions.index") }}" class="menu-link ">
+                            <a href="{{ route('admin.permissions.index') }}" class="menu-link ">
 
-                        {{ trans('cruds.permission.title') }}
-                    </a>
-                </li>
-                @endcan
-                @can('role_access')
-                <li class="menu-item {{ request()->is('admin/roles') || request()->is('admin/roles/*') ? 'active' : '' }}">
+                                {{ trans('cruds.permission.title') }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('role_access')
+                        <li
+                            class="menu-item {{ request()->is('admin/roles') || request()->is('admin/roles/*') ? 'active' : '' }}">
 
-                    <a href="{{ route("admin.roles.index") }}" class="menu-link ">
+                            <a href="{{ route('admin.roles.index') }}" class="menu-link ">
 
-                        {{ trans('cruds.role.title') }}
-                    </a>
-                </li>
-                @endcan
+                                {{ trans('cruds.role.title') }}
+                            </a>
+                        </li>
+                    @endcan
 
-                @can('user_access')
-                <li class="menu-item {{ request()->is('admin/users') || request()->is('admin/users/*') ? 'active' : '' }}">
+                    @can('user_access')
+                        <li
+                            class="menu-item {{ request()->is('admin/users') || request()->is('admin/users/*') ? 'active' : '' }}">
 
-                    <a href="{{ route("admin.users.index") }}" class="menu-link ">
+                            <a href="{{ route('admin.users.index') }}" class="menu-link ">
 
-                        {{ trans('cruds.user.title') }}
-                    </a>
-                </li>
-                @endcan
+                                {{ trans('cruds.user.title') }}
+                            </a>
+                        </li>
+                    @endcan
 
-            </ul>
+                </ul>
 
 
-        </li>
+            </li>
         @endcan
         @can('status_access')
-        <li class="menu-item {{ request()->is('admin/statuses') || request()->is('admin/statuses/*') ? 'active' : '' }}">
-            <a href="{{ route("admin.statuses.index") }}" class="menu-link ">
-                <i class="menu-icon tf-icons bx bx-message-square-dots"></i>
+            <li
+                class="menu-item {{ request()->is('admin/statuses') || request()->is('admin/statuses/*') ? 'active' : '' }}">
+                <a href="{{ route('admin.statuses.index') }}" class="menu-link ">
+                    <i class="menu-icon tf-icons bx bx-message-square-dots"></i>
 
-                <div data-i18n="Analytics"> {{ trans('cruds.status.title') }}</div>
-            </a>
-        </li>
+                    <div data-i18n="Analytics"> {{ trans('cruds.status.title') }}</div>
+                </a>
+            </li>
         @endcan
         @can('customer_application_access')
-        <li class="menu-item {{ request()->is('admin/customer-applications') || request()->is('admin/customer-applications/*') ? 'active' : '' }}">
-            <a href="{{ route("admin.customer-applications.index") }}" class="menu-link ">
-                <i class="menu-icon tf-icons bx bx-notepad"></i>
+            <li
+                class="menu-item {{ request()->is('admin/customer-applications') || request()->is('admin/customer-applications/*') ? 'active' : '' }}">
+                <a href="{{ route('admin.customer-applications.index') }}" class="menu-link ">
+                    <i class="menu-icon tf-icons bx bx-notepad"></i>
 
-                <div data-i18n="Analytics"> Customer Application</div>
-            </a>
-        </li>
+                    <div data-i18n="Analytics"> Customer Application</div>
+                </a>
+            </li>
         @endcan
         @can('payments_access')
-        <li class="menu-item {{ request()->is('admin/payments') || request()->is('admin/payments/*') ? 'active' : '' }}">
-            <a href="{{ route("admin.payments.index") }}" class="menu-link ">
-                <i class="menu-icon tf-icons bx bx-notepad"></i>
+            <li
+                class="menu-item {{ request()->is('admin/payments') || request()->is('admin/payments/*') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.index') }}" class="menu-link ">
+                    <i class="menu-icon tf-icons bx bx-notepad"></i>
 
-                <div data-i18n="Analytics"> Payment</div>
-            </a>
-        </li>
+                    <div data-i18n="Analytics"> Payment</div>
+                </a>
+            </li>
         @endcan
         @can('loan_application_access')
-        <li class="menu-item {{ request()->is('admin/loan-applications') || request()->is('admin/loan-applications/*') ? 'active' : '' }}">
-            <a href="{{ route("admin.loan-applications.index") }}" class="menu-link ">
-                <i class="menu-icon tf-icons bx bx-notepad"></i>
+            <li
+                class="menu-item {{ request()->is('admin/loan-applications') || request()->is('admin/loan-applications/*') ? 'active' : '' }}">
+                <a href="{{ route('admin.loan-applications.index') }}" class="menu-link ">
+                    <i class="menu-icon tf-icons bx bx-notepad"></i>
 
-                <div data-i18n="Analytics"> {{ trans('cruds.loanApplication.title') }}</div>
-            </a>
-        </li>
+                    <div data-i18n="Analytics"> {{ trans('cruds.loanApplication.title') }}</div>
+                </a>
+            </li>
         @endcan
-        @can('comment_access')
-        <li class="menu-item {{ request()->is('admin/comments') || request()->is('admin/comments/*') ? 'active' : '' }} ">
-            <a href="{{ route("admin.comments.index") }}" class="menu-link ">
-                <i class="menu-icon tf-icons bx bxs-comment-detail"></i>
-
-                <div data-i18n="Analytics"> {{ trans('cruds.comment.title') }}</div>
-            </a>
-        </li>
-        @endcan
+      
 
         @can('settings_access')
-        <li class="menu-item {{ request()->is('admin/settings') || request()->is('admin/settings/*') ? 'active open' : '' }} {{ request()->is('admin/settings-income-type') || request()->is('admin/settings-income-type/*') ? 'active open' : '' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <li
+                class="menu-item {{ request()->is('admin/settings') || request()->is('admin/settings/*') ? 'active open' : '' }} {{ request()->is('admin/settings-income-type') || request()->is('admin/settings-income-type/*') ? 'active open' : '' }}">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
 
-                <i class='menu-icon tf-icons bx bx-cog'></i>
+                    <i class='menu-icon tf-icons bx bx-cog'></i>
 
-                <div data-i18n="Layouts"> Settings</div>
-            </a>
+                    <div data-i18n="Layouts"> Settings</div>
+                </a>
 
-            <ul class="menu-sub">
-                <li class="menu-item {{ request()->is('admin/settings') || request()->is('admin/settings/*') ? 'active' : '' }}">
-                    <a href="{{ route("admin.settings.index") }}" class="menu-link ">
-                        <div data-i18n="Without menu"> Intrest Type</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ request()->is('admin/settings-income-type') || request()->is('admin/settings-income-type/*') ? 'active' : '' }}">
-                    <a href="{{ route("admin.settings.income") }}" class="menu-link ">
-                        <div data-i18n="Without menu"> Income type</div>
-                    </a>
-                </li>
+                <ul class="menu-sub">
+                    <li
+                        class="menu-item {{ request()->is('admin/settings') || request()->is('admin/settings/*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.index') }}" class="menu-link ">
+                            <div data-i18n="Without menu"> Intrest Type</div>
+                        </a>
+                    </li>
+                    <li
+                        class="menu-item {{ request()->is('admin/settings-income-type') || request()->is('admin/settings-income-type/*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.income') }}" class="menu-link ">
+                            <div data-i18n="Without menu"> Income type</div>
+                        </a>
+                    </li>
+                    <li
+                        class="menu-item {{ request()->is('admin/settings-charges') || request()->is('admin/settings-charges/*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.settings.charges') }}" class="menu-link ">
+                            <div data-i18n="Without menu">Charges</div>
+                        </a>
+                    </li>
 
-            </ul>
+                </ul>
 
 
-        </li>
+            </li>
         @endcan
 
 

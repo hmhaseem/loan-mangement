@@ -8,7 +8,7 @@
 
         <div class="col-12 mb-4">
 
-            <div class="bs-stepper wizard-vertical vertical   mt-2" id="wizard-validation">
+            <div class="bs-stepper wizard-vertical vertical mt-2" id="wizard-validation">
                 <div class="bs-stepper-header">
                     <div class="step" data-target="#account-details-validation">
                         <button type="button" class="step-trigger">
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="bs-stepper-content">
-                    <form method="POST" action="{{ route('admin.loan-applications.update', [$customerApplication->id]) }}"
+                    <form method="POST" action="{{ route('admin.customer-applications.update', [$customerApplication->id]) }}"
                         enctype="multipart/form-data" id="wizard-validation-form" onSubmit="return false" novalidate>
                         @method('PUT')
                         @csrf
@@ -242,7 +242,7 @@
                                     <label class="required form-label" for="bank_name">Bank Name</label>
                                     <input class="form-control {{ $errors->has('bank_name') ? 'is-invalid' : '' }}"
                                         type="text" name="bank_name" id="bank_name"
-                                        value="{{ old('bank_name', '') }}" required>
+                                        value="{{ old('bank_name', $customerApplication->bank->name) }}" required>
                                     @if ($errors->has('bank_name'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('bank_name') }}
@@ -252,8 +252,8 @@
                                 <div class="col-sm-6">
                                     <label class="required form-label" for="branch">Branch Name</label>
                                     <input class="form-control {{ $errors->has('branch') ? 'is-invalid' : '' }}"
-                                        type="text" name="branch" id="branch" value="{{ old('branch', '') }}"
-                                        required>
+                                        type="text" name="branch" id="branch"
+                                        value="{{ old('branch', $customerApplication->bank->branch) }}" required>
                                     @if ($errors->has('branch'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('branch') }}
@@ -264,7 +264,8 @@
                                     <label class="required form-label" for="branch">Account </label>
                                     <input class="form-control {{ $errors->has('account_no') ? 'is-invalid' : '' }}"
                                         type="text" name="account_no" id="account_no"
-                                        value="{{ old('account_no', '') }}" required maxlength="20">
+                                        value="{{ old('account_no', $customerApplication->bank->account_no) }}" required
+                                        maxlength="20">
                                     @if ($errors->has('account_no'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('account_no') }}
@@ -274,8 +275,8 @@
                                 <div class="col-sm-6">
                                     <label class="required form-label" for="remarks">remarks </label>
                                     <input class="form-control {{ $errors->has('remarks') ? 'is-invalid' : '' }}"
-                                        type="text" name="remarks" id="remarks" value="{{ old('remarks', '') }}"
-                                        required>
+                                        type="text" name="remarks" id="remarks"
+                                        value="{{ old('remarks', $customerApplication->bank->remarks) }}" required>
                                     @if ($errors->has('remarks'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('remarks') }}
@@ -302,11 +303,14 @@
                             </div>
                             <div class="row g-3">
                                 <div class="col-sm-6">
-                                    <label class="required" for="income_type">Income type</label>
+                                    <label class="required" for="income_type">Income type
+                                        {{ $customerApplication->incomeType }}</label>
                                     <select name="income_type" class="form-control select2" id="term_type">
                                         <option value="0">Select Type </option>
                                         @foreach ($incomeTypes as $incomeType)
-                                            <option value="{{ $incomeType->id }}">{{ $incomeType->name }} </option>
+                                            <option value="{{ $incomeType->id }}"
+                                                @if ($customerApplication->income_type == $incomeType->id) selected @endif>
+                                                {{ $incomeType->name }} </option>
                                         @endforeach
 
                                     </select>
@@ -320,7 +324,8 @@
                                     <label class="required" for="income">Income </label>
                                     <input class="form-control {{ $errors->has('income_amount') ? 'is-invalid' : '' }}"
                                         type="text" name="income_amount" id="income_amount"
-                                        value="{{ old('income_amount', '') }}" required maxlength="20">
+                                        value="{{ old('income_amount', $customerApplication->income_amount) }}" required
+                                        maxlength="20">
                                     @if ($errors->has('income_amount'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('income_amount') }}
@@ -331,8 +336,9 @@
                                 <div class="col-sm-6">
                                     <label class="required" for="expenses">Expenses </label>
                                     <input class="form-control {{ $errors->has('expenses') ? 'is-invalid' : '' }}"
-                                        type="text" name="expenses" id="expenses" value="{{ old('expenses', '') }}"
-                                        required maxlength="20">
+                                        type="text" name="expenses" id="expenses"
+                                        value="{{ old('expenses', $customerApplication->expenses) }}" required
+                                        maxlength="20">
                                     @if ($errors->has('expenses'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('expenses') }}
@@ -343,7 +349,8 @@
                                     <label class="required" for="branch">Loan purpose </label>
                                     <input class="form-control {{ $errors->has('loan_purpose') ? 'is-invalid' : '' }}"
                                         type="text" name="loan_purpose" id="loan_purpose"
-                                        value="{{ old('loan_purpose', '') }}" required maxlength="20">
+                                        value="{{ old('loan_purpose', $customerApplication->loan_purpose) }}" required
+                                        maxlength="20">
                                     @if ($errors->has('loan_purpose'))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('loan_purpose') }}
@@ -355,7 +362,7 @@
                                         <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
                                         <span class="align-middle d-sm-inline-block d-none">Previous</span>
                                     </button>
-                                    <button class="btn btn-success btn-submit">Submit</button>
+                                    <button class="btn btn-success btn-next btn-submit">Update</button>
                                 </div>
                             </div>
                         </div>
@@ -465,7 +472,7 @@
                                 type: 'image/jpeg,image/gif,image/png',
                                 message: 'Please choose a jpeg/png/gif file format',
                             }
-                          //  ,
+                            //  ,
                             // notEmpty: {
                             //     message: 'The nic back image is required'
                             // }
@@ -611,11 +618,12 @@
                     submitButton: new FormValidation.plugins.SubmitButton()
                 }
             }).on('core.form.valid', function() {
+           //     alert('Submitted..!!');
                 // You can submit the form
                 wizardValidationForm.submit()
                 // or send the form data to server via an Ajax request
                 // To make the demo simple, I just placed an alert
-                alert('Submitted..!!');
+
             });
 
             wizardValidationNext.forEach(item => {

@@ -148,8 +148,8 @@
                 </div>
                 <hr class="hr-tag" />
                 <!-- Social Links -->
-                <div id="social-links-vertical" class="content">
-                    <form method="POST" action="{{ route('admin.loan-applications.store') }}">
+                <div id="add-loan" class="content">
+                    <form method="POST" action="{{ route('admin.loan-applications.store') }}"  enctype="multipart/form-data">
 
                         @csrf
                         <div class="row g-3">
@@ -239,7 +239,7 @@
                                 @endif
                             </div>
                             <div class="col-sm-6">
-                                <label class="required" for="branch">Loan purpose </label>
+                                <label class="required  form-label" for="branch">Loan purpose </label>
                                 <input class="form-control {{ $errors->has('loan_purpose') ? 'is-invalid' : '' }}"
                                     type="text" name="loan_purpose" id="loan_purpose"
                                     value="{{ old('loan_purpose', '') }}" required maxlength="20">
@@ -248,6 +248,17 @@
                                         {{ $errors->first('loan_purpose') }}
                                     </div>
                                 @endif
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="required form-label" for="agreement">Agreement Document
+                                   </label>
+                                <input type="file" class="form-control" name="agreement" id="agreement" />
+                                @if ($errors->has('agreement'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('agreement') }}
+                                </div>
+                            @endif
                             </div>
 
                             <div class="col-12 d-flex justify-content-between">
@@ -270,6 +281,7 @@
         $("#basicData").hide();
         $(".spinner-border").hide();
 
+        $("#add-loan").hide();
         $(".no-result").hide();
 
         $(document).ready(function() {
@@ -340,8 +352,9 @@
 
                     $(".spinner-border").hide();
                     $(".search-icon").show();
-                    console.log(dataResult);
-                    if (dataResult.data != null) {
+
+                    if (dataResult.status === 'true') {
+                        $("#add-loan").show();
                         $("#basicData").fadeIn();
                         $(".no-result").hide();
                         let resultData = dataResult.data;
@@ -368,6 +381,9 @@
 
                     } else {
                         $(".no-result").show();
+                        $("#basicData").fadeOut();
+                        $(".spinner-border").hide();
+                        $("#add-loan").hide();
                     }
 
 

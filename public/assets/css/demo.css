@@ -147,3 +147,8 @@ div#basicData {
     color: red;
     margin-bottom: 0 !important;
 }
+
+.content {
+    display: block;
+    padding-bottom: 25px;
+}
