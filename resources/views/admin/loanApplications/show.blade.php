@@ -126,16 +126,12 @@
             <div class="form-group">
                 @if($user->is_admin && in_array($loanApplication->status_id, [1, 3, 4]))
                     <a class="btn btn-success" href="{{ route('admin.loan-applications.showSend', $loanApplication->id) }}">
-                        Send to
-                        @if($loanApplication->status_id == 1)
-                            analyst
-                        @else
-                            CFO
-                        @endif
+                        Send to manager
+                     
                     </a>
                 @elseif(($user->is_analyst && $loanApplication->status_id == 2) || ($user->is_cfo && $loanApplication->status_id == 5))
                     <a class="btn btn-success" href="{{ route('admin.loan-applications.showAnalyze', $loanApplication->id) }}">
-                        Submit analysis
+                        Submit manager
                     </a>
                 @endif
 
@@ -153,11 +149,7 @@
                     </form>
                 @endcan
             </div>
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.loan-applications.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
+            
         </div>
     </div>
 </div>

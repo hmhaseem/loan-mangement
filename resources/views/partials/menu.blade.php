@@ -84,19 +84,9 @@
             <li
                 class="menu-item {{ request()->is('admin/customer-applications') || request()->is('admin/customer-applications/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.customer-applications.index') }}" class="menu-link ">
-                    <i class="menu-icon tf-icons bx bx-notepad"></i>
+                    <i class="menu-icon tf-icons bx bx-book-open"></i>
 
-                    <div data-i18n="Analytics"> Customer Application</div>
-                </a>
-            </li>
-        @endcan
-        @can('payments_access')
-            <li
-                class="menu-item {{ request()->is('admin/payments') || request()->is('admin/payments/*') ? 'active' : '' }}">
-                <a href="{{ route('admin.payments.index') }}" class="menu-link ">
-                    <i class="menu-icon tf-icons bx bx-notepad"></i>
-
-                    <div data-i18n="Analytics"> Payment</div>
+                    <div data-i18n="Analytics"> Customer Managment</div>
                 </a>
             </li>
         @endcan
@@ -106,11 +96,21 @@
                 <a href="{{ route('admin.loan-applications.index') }}" class="menu-link ">
                     <i class="menu-icon tf-icons bx bx-notepad"></i>
 
-                    <div data-i18n="Analytics"> {{ trans('cruds.loanApplication.title') }}</div>
+                    <div data-i18n="Analytics">Loan Managment</div>
                 </a>
             </li>
         @endcan
-      
+        @can('payments_access')
+            <li
+                class="menu-item {{ request()->is('admin/payments') || request()->is('admin/payments/*') ? 'active' : '' }}">
+                <a href="{{ route('admin.payments.index') }}" class="menu-link ">
+                    <i class="menu-icon tf-icons bx bx-money"></i>
+                    <div data-i18n="Analytics"> Payment Managment</div>
+                </a>
+            </li>
+        @endcan
+
+
 
         @can('settings_access')
             <li

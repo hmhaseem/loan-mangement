@@ -115,6 +115,7 @@ class PaymentsController extends Controller
     {
         abort_if(Gate::denies('payments_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $loan =   LoanApplication::whereId($loanApplication)->with('payments')->first();
+     
         return view('admin.payments.show', compact('loanApplication', 'defaultStatus', 'user', 'logs', 'loan'));
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Charges;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
 use App\Http\Requests\StoreUserRequest;
@@ -12,6 +12,7 @@ use App\User;
 use Gate;
 use App\InterestType;
 use App\IncomeType;
+use App\Charges;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use \DB;
@@ -79,11 +80,12 @@ class SettingsController extends Controller
     {
         abort_if(Gate::denies('settings_cahrges_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $settings = Charges::first();
-      /// dd($settings);
+
+
         return view('admin.settings.settings-charges', compact('settings'));
     }
 
-    public function chargesStore(Request $request)
+    public function chargesStore(Request $request, Charges $charges)
     {
 
         abort_if(Gate::denies('settings_cahrges_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -91,10 +93,12 @@ class SettingsController extends Controller
             'insurance_charge' => 'required',
             'document_charge' => 'required',
         ]);
+        $update = $charges->find(1);
 
-        Charges::create($request->all());
-
-
+        $update->update([
+            'insurance_charge' => $request->insurance_charge,
+            'document_charge' => $request->document_charge
+        ]);
         return back()->with('success', 'Income has been added.');
     }
 }

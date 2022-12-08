@@ -58,7 +58,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('settings-income-type', 'SettingsController@income')->name('settings.income');
     Route::post('settings-income-type', 'SettingsController@incomeStore')->name('settings.income.store');
     Route::get('charges', 'SettingsController@charges')->name('settings.charges');
-    Route::post('charges', 'SettingsController@chargesStore')->name('settings.charges.store');
+    Route::put('charges', 'SettingsController@chargesStore')->name('settings.charges.store');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

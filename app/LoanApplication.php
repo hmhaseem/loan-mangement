@@ -71,6 +71,7 @@ class LoanApplication extends Model
     {
         return $this->belongsTo(CustomerApplication::class, 'customer_id');
     }
+    
     public function analyst()
     {
         return $this->belongsTo(User::class, 'analyst_id');

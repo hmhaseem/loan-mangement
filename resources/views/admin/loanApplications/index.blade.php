@@ -44,14 +44,14 @@
                             <th>
                                 {{ trans('cruds.loanApplication.fields.status') }}
                             </th>
-                            @if ($user->is_admin)
+                          
                                 <th>
                                     Operation Manager
                                 </th>
                                 <th>
-                                    Manager
+                                  Loan created by
                                 </th>
-                            @endif
+                           
                             <th>
                                 &nbsp;
                             </th>
@@ -76,30 +76,26 @@
                                 <td>
                                     {{ $user->is_user && $loanApplication->status_id < 8 ? $defaultStatus->name : $loanApplication->status->name }}
                                 </td>
-                                @if ($user->is_admin)
-                                    <td>
-                                        {{ $loanApplication->analyst->name ?? '' }}
-                                    </td>
-                                    <td>
-                                        {{ $loanApplication->cfo->name ?? '' }}
-                                    </td>
-                                @endif
+
                                 <td>
-                                    @if ($user->is_admin && in_array($loanApplication->status_id, [1, 3, 4]))
+                                    {{ $loanApplication->analyst->name ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $loanApplication->created_by->name ?? '' }}
+                                </td>
+
+                                <td>
+                                    @if (in_array($loanApplication->status_id, [1]))
                                         <a class="btn btn-xs btn-success"
                                             href="{{ route('admin.loan-applications.showSend', $loanApplication->id) }}">
-                                            Send to
-                                            @if ($loanApplication->status_id == 1)
-                                                Manager
-                                            @else
-                                                CFO
-                                            @endif
+                                            Send to Manager
+
                                         </a>
                                     @elseif(($user->is_analyst && $loanApplication->status_id == 2) ||
                                         ($user->is_cfo && $loanApplication->status_id == 5))
                                         <a class="btn btn-xs btn-success"
                                             href="{{ route('admin.loan-applications.showAnalyze', $loanApplication->id) }}">
-                                            Submit analysis
+                                            Submit Manager
                                         </a>
                                     @endif
 

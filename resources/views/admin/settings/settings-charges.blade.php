@@ -2,38 +2,52 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            Settings
+            Settings Chargers
+        </div>
+        <div class="container">
+            @if (Session::has('success'))
+                <div class="alert alert-success" role="alert">
+                    {{ Session::get('success') }}
+                </div>
+            @elseif(Session::has('warning'))
+                <div class="alert alert-warning" role="alert">
+                    {{ Session::get('warning') }}
+                </div>
+                <!-- here to 'withWarning()' -->
+            @endif
         </div>
 
         <div class="card-body">
-            <form name="add_name" id="add_name">
+            <form method="POST" action="{{ route('admin.settings.charges.store') }}">
+                @method('PUT')
+                @csrf
+                <div class="col-sm-6">
+                    <label class="required form-label" for="insurance_charge">Insurance Charge</label>
+                    <input type="text" name="insurance_charge" placeholder="Insurance Charge" class="form-control "
+                        value="{{ $settings->insurance_charge }}" />
+                    @if ($errors->has('payment_amount'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('insurance_charge') }}
+                        </div>
+                    @endif
 
-
-                <div class="alert alert-danger print-error-msg" style="display:none">
-                    <ul></ul>
                 </div>
 
+                <div class="col-sm-6">
+                    <label class="required form-label" for="document_charge">Document Charge</label>
+                    <input type="text" name="document_charge" placeholder="Document Charge" class="form-control "
+                        value="{{ $settings->document_charge }}" />
+                    @if ($errors->has('document_charge'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('document_charge') }}
+                        </div>
+                    @endif
 
-                <div class="alert alert-success print-success-msg" style="display:none">
-                    <ul></ul>
                 </div>
 
+                <button type="submit" class="btn btn-info mt-10">Submit </button>
 
-                <div class="table-responsive">
-                    <button type="button" name="add" id="add" class="btn btn-success mb-10">Add More</button>
-                    <table class="table table-bordered" id="dynamic_field">
 
-                        <tr>
-                            <td><input type="text" name="insurance_charge" placeholder="Product Name"
-                                    class="form-control " value="{{ $settings->insurance_charge }}" /></td>
-                            <td><input type="number" name="document_charge" placeholder="Intrest rate"
-                                    class="form-control " value="{{ $settings->interest_rate }}" /></td>
-
-                        </tr>
-
-                    </table>
-                    <input type="button" name="submit" id="submit" class="btn btn-info mt-10" value="Submit" />
-                </div>
 
 
             </form>

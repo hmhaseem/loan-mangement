@@ -4,7 +4,18 @@
         <div class="card-header">
             {{ trans('global.create') }} Customer Application
         </div>
-
+        <div class="container">
+        @if (Session::has('success'))
+            <div class="alert alert-success" role="alert">
+                {{ Session::get('success') }}
+            </div>
+        @elseif(Session::has('warning'))
+            <div class="alert alert-warning" role="alert">
+                {{ Session::get('warning') }}... !
+            </div>
+            <!-- here to 'withWarning()' -->
+        @endif
+        </div>
 
         <div class="col-12 mb-4">
 

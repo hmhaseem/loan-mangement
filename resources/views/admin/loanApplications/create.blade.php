@@ -149,7 +149,8 @@
                 <hr class="hr-tag" />
                 <!-- Social Links -->
                 <div id="add-loan" class="content">
-                    <form method="POST" action="{{ route('admin.loan-applications.store') }}"  enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('admin.loan-applications.store') }}"
+                        enctype="multipart/form-data">
 
                         @csrf
                         <div class="row g-3">
@@ -216,7 +217,8 @@
                             </div>
 
                             <div class="col-sm-6">
-                                <label class="required form-label" for="total_amount">Total Amount With Intrest</label>
+                                <label class="required form-label" for="total_amount">Total Amount(interest + document +
+                                    insurance )</label>
                                 <input class="form-control {{ $errors->has('total_amount') ? 'is-invalid' : '' }}"
                                     readonly type="number" name="total_amount" id="total_amount"
                                     value="{{ old('total_amount', '') }}" step="0.01" required>
@@ -252,13 +254,13 @@
 
                             <div class="col-sm-6">
                                 <label class="required form-label" for="agreement">Agreement Document
-                                   </label>
+                                </label>
                                 <input type="file" class="form-control" name="agreement" id="agreement" />
                                 @if ($errors->has('agreement'))
-                                <div class="invalid-feedback">
-                                    {{ $errors->first('agreement') }}
-                                </div>
-                            @endif
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('agreement') }}
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="col-12 d-flex justify-content-between">

@@ -58,7 +58,7 @@
                                 Balance Payment
                             </th>
                             <td>
-                                <?php $balance = $loan->loan_amount - $total; ?>
+                                <?php $balance = $loan->total_amount - $total; ?>
                                 <?php echo number_format((float) $balance, 2, '.', ''); ?>
 
                             </td>

@@ -34,7 +34,7 @@ class LoanApplicationsController extends Controller
             // ->select('customer_applications.*', 'loan_applications.*', 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
             ->get();
 
-     
+
         $defaultStatus    = Status::find(1);
         $user             = auth()->user();
 
@@ -133,16 +133,14 @@ class LoanApplicationsController extends Controller
 
     public function showSend(LoanApplication $loanApplication)
     {
-        abort_if(!auth()->user()->is_admin, Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        if ($loanApplication->status_id == 1) {
+        //abort_if(!auth()->user()->is_admin, Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        if ($loanApplication->status_id == 1 && !empty(Role::find(7)->users)) {
             $role = 'Operation Manager';
             $users = Role::find(7)->users->pluck('name', 'id');
-        } else if (in_array($loanApplication->status_id, [3, 4])) {
-            $role = 'CFO';
-            $users = Role::find(5)->users->pluck('name', 'id');
         } else {
-            abort(Response::HTTP_FORBIDDEN, '403 Forbidden');
+            abort(Response::HTTP_ACCEPTED, 'Operation Manager user not found');
         }
 
         return view('admin.loanApplications.send', compact('loanApplication', 'role', 'users'));
@@ -150,16 +148,13 @@ class LoanApplicationsController extends Controller
 
     public function send(Request $request, LoanApplication $loanApplication)
     {
-        abort_if(!auth()->user()->is_admin, Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        //  abort_if(!auth()->user()->is_admin, Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($loanApplication->status_id == 1) {
             $column = 'analyst_id';
             $users  = Role::find(7)->users->pluck('id');
             $status = 2;
-        } else if (in_array($loanApplication->status_id, [3, 4])) {
-            $column = 'cfo_id';
-            $users  = Role::find(5)->users->pluck('id');
-            $status = 5;
         } else {
             abort(Response::HTTP_FORBIDDEN, '403 Forbidden');
         }
