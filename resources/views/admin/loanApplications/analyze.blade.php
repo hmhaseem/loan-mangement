@@ -48,13 +48,17 @@
                     </tr>
                     <tr>
                         <td class="ps-0 align-top text-nowrap py-1"><strong>Nic Image (Front)</strong></td>
-                        <td class="px-0 py-1"><img src="{{ URL::asset('public/uploads') }}/{{$customerDetails->nic_photo}}" alt="logo" width="100"></td>
+                        <td class="px-0 py-1"><img
+                                src="{{ URL::asset('public/uploads') }}/{{ $customerDetails->nic_photo }}" alt="logo"
+                                width="100"></td>
                     </tr>
                     <tr>
                         <td class="ps-0 align-top text-nowrap py-1"><strong>Nic Image (Back)</strong></td>
-                        <td class="px-0 py-1">  <img src="{{ URL::asset('public/uploads') }}/{{$customerDetails->nic_back}}" alt="logo" width="100"></td>
+                        <td class="px-0 py-1"> <img
+                                src="{{ URL::asset('public/uploads') }}/{{ $customerDetails->nic_back }}" alt="logo"
+                                width="100"></td>
                     </tr>
-                   
+
                     <tr>
                         <td class="ps-0 align-top text-nowrap py-1"><strong>Bank Name</strong></td>
                         <td class="px-0 py-1">{{ $customerDetails->bank_name }}</td>
@@ -76,7 +80,10 @@
                         <td class="ps-0 align-top text-nowrap py-1"><strong>Expenses</strong></td>
                         <td class="px-0 py-1">{{ $customerDetails->expenses }}</td>
                     </tr>
-
+                    <tr>
+                        <td class="ps-0 align-top text-nowrap py-1"><strong>Income</strong></td>
+                        <td class="px-0 py-1">{{ $customerDetails->income_amount }}</td>
+                    </tr>
                     <tr>
                         <td class="ps-0 align-top text-nowrap py-1"><strong>Loan Purpose</strong></td>
                         <td class="px-0 py-1">{{ $customerDetails->loan_purpose }}</td>
@@ -86,7 +93,7 @@
                         <td class="ps-0 align-top text-nowrap py-1"><strong>Weekly Pay</strong></td>
                         <td class="px-0 py-1">{{ $customerDetails->weekly_pay }}</td>
                     </tr>
-                    
+
 
                 </tbody>
             </table>

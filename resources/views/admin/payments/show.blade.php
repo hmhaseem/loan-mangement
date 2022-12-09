@@ -30,14 +30,18 @@
                         </tr>
                         <tr>
                             <th>
-                                Payment List
+                                Payment History
                             </th>
                             <td>
+
                                 <?php $total = 0; ?>
                                 @if ($loan->payments->count() > 0)
                                     @foreach ($loan->payments as $payment)
                                         <div> {{ $payment->payment_amount }}</div>
                                         <?php $total += $payment->payment_amount; ?>
+                                        @can('settings_history')
+                                            <a href="{{ route('admin.payments.history', [$loan->id]) }}">More Details</button>
+                                            @endcan
                                     @endforeach
                                 @else
                                     <p class="no-records"> There is no payment ! </p>
@@ -58,7 +62,9 @@
                                 Balance Payment
                             </th>
                             <td>
-                                <?php $balance = $loan->total_amount - $total; ?>
+                                <?php 
+                                    $finalTotal= $loan->total_amount + $charges->insurance_charge + $charges->document_charge;
+                                    $balance = $finalTotal - $total; ?>
                                 <?php echo number_format((float) $balance, 2, '.', ''); ?>
 
                             </td>
@@ -103,7 +109,6 @@
 
 
                             <div class="col-12 d-flex justify-content-between">
-
                                 <button class="btn btn-success btn-submit" type="submit">Make the Payment</button>
                             </div>
                     </form>

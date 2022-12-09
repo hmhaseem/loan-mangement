@@ -187,6 +187,7 @@ class LoanApplicationsController extends Controller
             ->select('customer_applications.*', 'loan_applications.*', 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
             ->first();
 
+
         return view('admin.loanApplications.analyze', compact('loanApplication', 'customerDetails'));
     }
 
@@ -230,7 +231,6 @@ class LoanApplicationsController extends Controller
         //   $customerDetails = CustomerApplication::where('nic', '=', $nic)->bank()->get();
         $customerDetails = CustomerApplication::where("customer_applications.nic", "=", $nic)
             ->rightJoin('bank', 'bank.id', '=', 'customer_applications.bank_id')
-
             ->select('customer_applications.*', 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
             ->first();
 

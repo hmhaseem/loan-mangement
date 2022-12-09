@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Bank;
+use App\Charges;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyLoanApplicationRequest;
 use App\Http\Requests\StoreLoanApplicationRequest;
@@ -115,8 +116,11 @@ class PaymentsController extends Controller
     {
         abort_if(Gate::denies('payments_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $loan =   LoanApplication::whereId($loanApplication)->with('payments')->first();
-     
-        return view('admin.payments.show', compact('loanApplication', 'defaultStatus', 'user', 'logs', 'loan'));
+        $charges = Charges::first();
+        // dd($charges->insurance_charge);
+        //  document_charge
+
+        return view('admin.payments.show', compact('loanApplication', 'defaultStatus', 'user', 'logs', 'loan', 'charges'));
     }
 
     public function destroy(LoanApplication $loanApplication)
@@ -151,10 +155,19 @@ class PaymentsController extends Controller
             ->select('customer_applications.*', 'loan_applications.*', 'loan_applications.id as loanId', DB::raw("group_concat(payments.payment_amount) as paymentList"), 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
             ->first()->toArray();
 
+        $charges = Charges::first();
+
         if (!is_null($customerDetails['id'])) {
-            return response()->json(array('data' => $customerDetails, 'message' => 'retrived list', 'status' => 'true'), 200);
+            return response()->json(array('data' => $customerDetails, 'chargers' => $charges, 'message' => 'retrived list', 'status' => 'true'), 200);
         } else {
             return response()->json(array('data' => [], 'status' => 'false'), 200);
         }
+    }
+
+    public function history()
+    {
+        abort_if(Gate::denies('payments_history'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $loan =   LoanApplication::whereId($loanApplication)->with('payments')->first();
+        return view('admin.payments.history', compact('loanApplication', 'defaultStatus', 'user', 'logs', 'loan'));
     }
 }

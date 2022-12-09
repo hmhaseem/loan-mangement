@@ -47,6 +47,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     //Payment
     Route::resource('payments', 'PaymentsController');
     Route::post('paymentsfind', 'PaymentsController@getDetailsByNic')->name('payments.find');
+    Route::get('payments/history/{id}', 'PaymentsController@history')->name('payments.history');
 
     // Comments
     Route::delete('comments/destroy', 'CommentsController@massDestroy')->name('comments.massDestroy');

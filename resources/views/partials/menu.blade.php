@@ -70,7 +70,7 @@
 
             </li>
         @endcan
-        @can('status_access')
+        {{-- @can('status_access')
             <li
                 class="menu-item {{ request()->is('admin/statuses') || request()->is('admin/statuses/*') ? 'active' : '' }}">
                 <a href="{{ route('admin.statuses.index') }}" class="menu-link ">
@@ -79,7 +79,7 @@
                     <div data-i18n="Analytics"> {{ trans('cruds.status.title') }}</div>
                 </a>
             </li>
-        @endcan
+        @endcan --}}
         @can('customer_application_access')
             <li
                 class="menu-item {{ request()->is('admin/customer-applications') || request()->is('admin/customer-applications/*') ? 'active' : '' }}">
@@ -114,7 +114,7 @@
 
         @can('settings_access')
             <li
-                class="menu-item {{ request()->is('admin/settings') || request()->is('admin/settings/*') ? 'active open' : '' }} {{ request()->is('admin/settings-income-type') || request()->is('admin/settings-income-type/*') ? 'active open' : '' }}">
+                class="menu-item {{ request()->is('admin/settings') || request()->is('admin/settings/*') ? 'active open' : '' }} {{ request()->is('admin/settings-income-type') || request()->is('admin/settings-income-type/*') ? 'active open' : '' }} {{ request()->is('admin/charges') || request()->is('admin/charges/*') ? 'active open' : '' }}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
 
                     <i class='menu-icon tf-icons bx bx-cog'></i>
@@ -135,12 +135,14 @@
                             <div data-i18n="Without menu"> Income type</div>
                         </a>
                     </li>
-                    <li
-                        class="menu-item {{ request()->is('admin/settings-charges') || request()->is('admin/settings-charges/*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.settings.charges') }}" class="menu-link ">
-                            <div data-i18n="Without menu">Charges</div>
-                        </a>
-                    </li>
+                    @can('settings_cahrges_access')
+                        <li
+                            class="menu-item {{ request()->is('admin/charges') || request()->is('admin/charges/*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.settings.charges') }}" class="menu-link ">
+                                <div data-i18n="Without menu">Charges</div>
+                            </a>
+                        </li>
+                    @endcan
 
                 </ul>
 

@@ -64,7 +64,7 @@
 
                                 <tr>
                                     <th>
-                                        Payment List
+                                        Payment History
                                     </th>
                                     <td>
                                         <span id="paymentList" class="paymentList value-field"></span>
@@ -124,6 +124,7 @@
                                     </th>
                                     <td>
                                         <span id="total_amount_with_intrest" class="value-field"></span>
+
                                     </td>
                                 </tr>
 
@@ -133,6 +134,25 @@
                                     </th>
                                     <td>
                                         <span id="weekly_pay" class="value-field"></span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>
+                                        Insurance Charge
+                                    </th>
+                                    <td>
+                                        <span id="insurance_charge" class="value-field"></span>
+                                    </td>
+                                </tr>
+
+
+                                <tr>
+                                    <th>
+                                        Document Charge
+                                    </th>
+                                    <td>
+                                        <span id="document_charge" class="value-field"></span>
                                     </td>
                                 </tr>
 
@@ -165,8 +185,6 @@
                                         {{ $errors->first('payment_amount') }}
                                     </div>
                                 @endif
-
-
                                 <input type="hidden" value="" name="loan_id" id="loan_id">
                             </div>
 
@@ -206,15 +224,7 @@
         $("#paymentsSubmitDetails").hide();
         $(".no-result").hide();
 
-        $(document).ready(function() {
-
-
-
-
-
-
-
-        })
+        $(document).ready(function() {})
     </script>
 
     <script>
@@ -230,21 +240,21 @@
             });
             let nic = $("#nic").val();
             var base_path = '{{ url('/admin/paymentsfind') }}';
-             
+
             $.ajax({
                 url: base_path,
                 type: "POST",
                 data: {
                     nic: nic
                 },
-                //cache: true,
+
                 encode: true,
                 dataType: 'json',
                 success: function(dataResult) {
 
                     $(".spinner-border").hide();
                     $(".search-icon").show();
-                    console.log(dataResult);
+                    //   console.log(dataResult);
                     if (dataResult.status === 'true') {
                         $("#paymentsSubmitDetails").fadeIn();
                         $("#paymentDetails").fadeIn();
@@ -277,11 +287,18 @@
                         const payment = resultData.paymentList.split(",");
                         payment.forEach(myFunction);
 
+                        $('#insurance_charge').text(dataResult.chargers.insurance_charge);
+                        $('#document_charge').text(dataResult.chargers.document_charge);
+                        console.log(dataResult.chargers.insurance_charge);
+                        console.log(dataResult.chargers.document_charge);
 
                         function myFunction(item) {
                             $(".paymentList").append(`<p>${item}</p>`);
                             sum += +item;
                         }
+
+                        let finalTotal = dataResult.total_amount + dataResult.chargers.insurance_charge +
+                            dataResult.chargers.document_charge;
 
                         let balance = resultData.total_amount - sum;
                         $("#balance").text(balance.toFixed(2));
