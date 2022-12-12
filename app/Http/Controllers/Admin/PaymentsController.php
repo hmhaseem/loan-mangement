@@ -164,10 +164,11 @@ class PaymentsController extends Controller
         }
     }
 
-    public function history()
+    public function history($id)
     {
         abort_if(Gate::denies('payments_history'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $loan =   LoanApplication::whereId($loanApplication)->with('payments')->first();
-        return view('admin.payments.history', compact('loanApplication', 'defaultStatus', 'user', 'logs', 'loan'));
+        $loan =   LoanApplication::whereId($id)->with('payments', 'customer')->get();
+       
+        return view('admin.payments.history', compact('loan'));
     }
 }

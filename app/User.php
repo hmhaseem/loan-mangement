@@ -106,4 +106,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payments::class);
+    }
 }

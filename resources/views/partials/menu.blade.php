@@ -110,6 +110,16 @@
             </li>
         @endcan
 
+        @can('account_access')
+            <li
+                class="menu-item {{ request()->is('admin/accounts') || request()->is('admin/accounts/*') ? 'active' : '' }}">
+                <a href="{{ route('admin.accounts.index') }}" class="menu-link ">
+
+                    <i class='menu-icon tf-icons bx bxs-bank'></i>
+                    <div data-i18n="Analytics"> Account Managment</div>
+                </a>
+            </li>
+        @endcan
 
 
         @can('settings_access')

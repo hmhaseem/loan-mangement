@@ -11,8 +11,8 @@ use \DateTimeInterface;
 
 class CustomerApplication extends Model
 {
-   // use SoftDeletes, MultiTenantModelTrait, Auditable;
-    use SoftDeletes,   Auditable;
+  use SoftDeletes, MultiTenantModelTrait, Auditable;
+   // use SoftDeletes,   Auditable;
     public $table = 'customer_applications';
 
     protected $dates = [

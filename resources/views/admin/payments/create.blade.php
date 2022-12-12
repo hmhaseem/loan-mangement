@@ -68,6 +68,7 @@
                                     </th>
                                     <td>
                                         <span id="paymentList" class="paymentList value-field"></span>
+                                        <a href="#" id="moreDetails"> More details </a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -260,6 +261,8 @@
                         $("#paymentDetails").fadeIn();
                         $(".no-result").hide();
                         let resultData = dataResult.data;
+                        let url = `/history/${resultData.loanId}`;
+                        $("#moreDetails").attr('href', url);
                         $("#name").text(resultData.name);
                         $("#gender").text(resultData.gender);
                         $("#email").text(resultData.email);

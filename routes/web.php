@@ -44,6 +44,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Customer Applications
     Route::resource('customer-applications', 'CustomerApplicationsController');
 
+    //Accounts
+    Route::resource('accounts', 'AccountsController');
+    
     //Payment
     Route::resource('payments', 'PaymentsController');
     Route::post('paymentsfind', 'PaymentsController@getDetailsByNic')->name('payments.find');

@@ -33,18 +33,16 @@
                                 Payment History
                             </th>
                             <td>
-
                                 <?php $total = 0; ?>
                                 @if ($loan->payments->count() > 0)
                                     @foreach ($loan->payments as $payment)
                                         <div> {{ $payment->payment_amount }}</div>
                                         <?php $total += $payment->payment_amount; ?>
-                                        @can('settings_history')
-                                            <a href="{{ route('admin.payments.history', [$loan->id]) }}">More Details</button>
-                                            @endcan
                                     @endforeach
-                                @else
-                                    <p class="no-records"> There is no payment ! </p>
+                                    <a href="{{ route('admin.payments.history', [$loan->id]) }}">More
+                                        Details</button>
+                                    @else
+                                        <p class="no-records"> There is no payment ! </p>
                                 @endif
                             </td>
                         </tr>
@@ -62,9 +60,9 @@
                                 Balance Payment
                             </th>
                             <td>
-                                <?php 
-                                    $finalTotal= $loan->total_amount + $charges->insurance_charge + $charges->document_charge;
-                                    $balance = $finalTotal - $total; ?>
+                                <?php
+                                $finalTotal = $loan->total_amount + $charges->insurance_charge + $charges->document_charge;
+                                $balance = $finalTotal - $total; ?>
                                 <?php echo number_format((float) $balance, 2, '.', ''); ?>
 
                             </td>
