@@ -19,18 +19,19 @@ use App\IncomeType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Accounts;
 
 class AccountsController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('customer_application_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $customerApplications = CustomerApplication::with('status', 'analyst', 'cfo')->get();
-        $defaultStatus    = Status::find(1);
-        $user             = auth()->user();
-
-        return view('admin.customerApplications.index', compact('customerApplications', 'defaultStatus', 'user'));
+        abort_if(Gate::denies('account_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $accounts = Accounts::get();
+        $total = 0;
+        foreach ($accounts as $amount) {
+            $total += $amount->payment_amount;
+        }
+        return view('admin.accounts.index', compact('total', 'accounts'));
     }
 
     public function create()
@@ -50,9 +51,8 @@ class AccountsController extends Controller
     {
 
         $requestData = $request->all();
-        $loanApplication = CustomerApplication::create($requestData);
-
-        return redirect()->route('admin.customer-applications.index');
+        Accounts::create($requestData);
+        return redirect()->route('admin.accounts.index');
     }
 
     public function edit(CustomerApplication $customerApplication)
@@ -110,6 +110,4 @@ class AccountsController extends Controller
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
-
- 
 }

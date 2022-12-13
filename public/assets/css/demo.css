@@ -137,13 +137,12 @@ div#basicData {
     margin-bottom: 40px;
 }
 
-.ptb-10{
+.ptb-10 {
     padding-top: 10px;
     padding-bottom: 10px;
 }
 
-
-.no-records{
+.no-records {
     color: red;
     margin-bottom: 0 !important;
 }
@@ -151,4 +150,13 @@ div#basicData {
 .content {
     display: block;
     padding-bottom: 25px;
+}
+
+.blance-deposit-amount {
+    background: #f8f8f8;
+    padding: 5px;
+    width: 200px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }

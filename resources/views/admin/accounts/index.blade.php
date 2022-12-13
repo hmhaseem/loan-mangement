@@ -1,17 +1,8 @@
 @extends('layouts.admin')
 @section('content')
-    @can('loan_application_create')
-        <div style="margin-bottom: 10px;" class="row">
-            <div class="col-lg-12">
-                <a class="btn btn-success" href="{{ route('admin.loan-applications.create') }}">
-                    {{ trans('global.add') }} {{ trans('cruds.loanApplication.title_singular') }}
-                </a>
-            </div>
-        </div>
-    @endcan
     <div class="card">
         <div class="card-header">
-            {{ trans('cruds.loanApplication.title_singular') }} {{ trans('global.list') }}
+            Account Managment
         </div>
         @if (Session::has('success'))
             <div class="alert alert-success" role="alert">
@@ -24,180 +15,34 @@
             <!-- here to 'withWarning()' -->
         @endif
         <div class="card-body">
-            <div class="table-responsive">
-                <table class=" table table-bordered table-striped table-hover datatable datatable-LoanApplication">
-                    <thead>
+            <table class="table table-border">
+                <thead>
+                    <th>Id</th>
+                    <th>Deposit Amount</th>
+                    <th>Remarks</th>
+                    <th>Auth name</th>
+                    <th>Date</th>
+
+                </thead>
+                <tbody>
+                    @foreach ($accounts as $item)
                         <tr>
-                            <th width="10">
-
-                            </th>
-                            <th>
-                                {{ trans('cruds.loanApplication.fields.id') }}
-                            </th>
-                            <th>
-                                Name
-                            </th>
-                            <th>
-                                {{ trans('cruds.loanApplication.fields.loan_amount') }}
-                            </th>
-
-                            <th>
-                                {{ trans('cruds.loanApplication.fields.status') }}
-                            </th>
-                          
-                                <th>
-                                    Operation Manager
-                                </th>
-                                <th>
-                                  Loan created by
-                                </th>
-                           
-                            <th>
-                                &nbsp;
-                            </th>
+                            <td>{{ $item->id }}
+                            <td>{{ $item->payment_amount }}</td>
+                            <td>{{ $item->remarks }}</td>
+                            <td>{{ $item->created_by['name'] }}</td>
+                            <td>{{ $item->created_at }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($loanApplications as $key => $loanApplication)
-                            <tr data-entry-id="{{ $loanApplication->id }}">
-                                <td>
+                    @endforeach
 
-                                </td>
-                                <td>
-                                    {{ $loanApplication->id ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $loanApplication->customer->name ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $loanApplication->loan_amount ?? '' }}
-                                </td>
-
-                                <td>
-                                    {{ $user->is_user && $loanApplication->status_id < 8 ? $defaultStatus->name : $loanApplication->status->name }}
-                                </td>
-
-                                <td>
-                                    {{ $loanApplication->analyst->name ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $loanApplication->created_by->name ?? '' }}
-                                </td>
-
-                                <td>
-                                    @if (in_array($loanApplication->status_id, [1]))
-                                        <a class="btn btn-xs btn-success"
-                                            href="{{ route('admin.loan-applications.showSend', $loanApplication->id) }}">
-                                            Send to Manager
-
-                                        </a>
-                                    @elseif(($user->is_analyst && $loanApplication->status_id == 2) ||
-                                        ($user->is_cfo && $loanApplication->status_id == 5))
-                                        <a class="btn btn-xs btn-success"
-                                            href="{{ route('admin.loan-applications.showAnalyze', $loanApplication->id) }}">
-                                            Submit Manager
-                                        </a>
-                                    @endif
-
-                                    @can('loan_application_show')
-                                        <a class="btn btn-xs btn-primary"
-                                            href="{{ route('admin.loan-applications.show', $loanApplication->id) }}">
-                                            {{ trans('global.view') }}
-                                        </a>
-                                    @endcan
-
-                                    @if (Gate::allows('loan_application_edit'))
-                                        <a class="btn btn-xs btn-info"
-                                            href="{{ route('admin.loan-applications.edit', $loanApplication->id) }}">
-                                            {{ trans('global.edit') }}
-                                        </a>
-                                    @endif
-
-                                    @can('loan_application_delete')
-                                        <form action="{{ route('admin.loan-applications.destroy', $loanApplication->id) }}"
-                                            method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
-                                            style="display: inline-block;">
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input type="submit" class="btn btn-xs btn-danger"
-                                                value="{{ trans('global.delete') }}">
-                                        </form>
-                                    @endcan
-
-                                </td>
-
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                </tbody>
+            </table>
+            <div class="mt-10">
+                Total Deposit Amount : {{ $total }}
             </div>
+           
         </div>
 
 
     </div>
-@endsection
-@section('scripts')
-    <script src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
-    @parent
-
-    <script>
-        $(function() {
-            let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-            @can('loan_application_delete')
-                let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
-                let deleteButton = {
-                    text: deleteButtonTrans,
-                    url: "{{ route('admin.loan-applications.massDestroy') }}",
-                    className: 'btn-danger',
-                    action: function(e, dt, node, config) {
-                        var ids = $.map(dt.rows({
-                            selected: true
-                        }).nodes(), function(entry) {
-                            return $(entry).data('entry-id')
-                        });
-
-                        if (ids.length === 0) {
-                            alert('{{ trans('global.datatables.zero_selected') }}')
-
-                            return
-                        }
-
-                        if (confirm('{{ trans('global.areYouSure') }}')) {
-                            $.ajax({
-                                    headers: {
-                                        'x-csrf-token': _token
-                                    },
-                                    method: 'POST',
-                                    url: config.url,
-                                    data: {
-                                        ids: ids,
-                                        _method: 'DELETE'
-                                    }
-                                })
-                                .done(function() {
-                                    location.reload()
-                                })
-                        }
-                    }
-                }
-                dtButtons.push(deleteButton)
-            @endcan
-
-            $.extend(true, $.fn.dataTable.defaults, {
-                orderCellsTop: true,
-                order: [
-                    [1, 'desc']
-                ],
-                pageLength: 100,
-            });
-            let table = $('.datatable-LoanApplication:not(.ajaxTable)').DataTable({
-                buttons: dtButtons
-            })
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
-                $($.fn.dataTable.tables(true)).DataTable()
-                    .columns.adjust();
-            });
-
-        })
-    </script>
 @endsection

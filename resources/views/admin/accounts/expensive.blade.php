@@ -20,7 +20,7 @@
                 @csrf
                 <div class="row">
                     <div class="col-sm-6">
-                        <label class="required form-label" for="deposit_amount">Deposit Amount</label>
+                        <label class="required form-label" for="deposit_amount">Expensive Amount</label>
                         <input class="form-control {{ $errors->has('deposit_amount') ? 'is-invalid' : '' }}" type="number"
                             name="deposit_amount" id="deposit_amount" value="{{ old('deposit_amount', '') }}" required
                             maxlength="20">
