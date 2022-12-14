@@ -21,34 +21,32 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Accounts;
 
-class AccountsController extends Controller
+class ExpensiveController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('account_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $accounts = Accounts::with('statusBy')->get();
+        abort_if(Gate::denies('expensive_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $accounts = Accounts::get();
         $total = 0;
         foreach ($accounts as $amount) {
             $total += $amount->payment_amount;
         }
-        return view('admin.accounts.index', compact('total', 'accounts'));
+        return view('admin.expensive.index', compact('total', 'accounts'));
     }
 
     public function create()
     {
-        abort_if(Gate::denies('accounts_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return view('admin.accounts.create');
+       abort_if(Gate::denies('expensive_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        return view('admin.expensive.create');
     }
-
-
+  
 
     public function store(StoreCustomerApplicationRequest $request)
     {
 
         $requestData = $request->all();
-        $requestData['status'] = 11; // 11 means 'Deposited' status it's comming from status table
         Accounts::create($requestData);
-        return redirect()->route('admin.accounts.index');
+        return redirect()->route('admin.expensive.index');
     }
 
     public function edit(CustomerApplication $customerApplication)
@@ -69,14 +67,14 @@ class AccountsController extends Controller
 
         $customerApplication->load('status', 'bank');
 
-        return view('admin.accounts.edit', compact('statuses', 'customerApplication', 'loanTypes', 'incomeTypes', 'loarnTerms'));
+        return view('admin.expensive.edit', compact('statuses', 'customerApplication', 'loanTypes', 'incomeTypes', 'loarnTerms'));
     }
 
     public function update(StoreCustomerApplicationRequest $request, CustomerApplication $customerApplication)
     {
         $customerApplication->update($request->all());
 
-        return redirect()->route('admin.customer-applications.index');
+        return redirect()->route('admin.expensive.index');
     }
 
     public function show(CustomerApplication $customerApplication)
@@ -88,7 +86,7 @@ class AccountsController extends Controller
         $user          = auth()->user();
         //  $logs          = AuditLogService::generateLogs($customerApplication);
 
-        return view('admin.loanApplications.show', compact('loanApplication', 'defaultStatus', 'user', 'logs'));
+        return view('admin.expensive.show', compact('loanApplication', 'defaultStatus', 'user', 'logs'));
     }
 
     public function destroy(CustomerApplication $loanApplication)

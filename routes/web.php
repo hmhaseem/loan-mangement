@@ -46,7 +46,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     //Accounts
     Route::resource('accounts', 'AccountsController');
-    
+
+
+    //Expensive
+    Route::resource('accounts/expensive', 'ExpensiveController');
+
+
+    // Expensive Type
+    Route::resource('accounts/expensive/type', 'ExpensiveTypeController');
+
     //Payment
     Route::resource('payments', 'PaymentsController');
     Route::post('paymentsfind', 'PaymentsController@getDetailsByNic')->name('payments.find');

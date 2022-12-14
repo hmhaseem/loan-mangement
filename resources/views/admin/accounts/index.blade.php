@@ -18,9 +18,10 @@
             <table class="table table-border">
                 <thead>
                     <th>Id</th>
-                    <th>Deposit Amount</th>
+                    <th>Amount</th>
                     <th>Remarks</th>
                     <th>Auth name</th>
+                    <th>Status </th>
                     <th>Date</th>
 
                 </thead>
@@ -31,6 +32,18 @@
                             <td>{{ $item->payment_amount }}</td>
                             <td>{{ $item->remarks }}</td>
                             <td>{{ $item->created_by['name'] }}</td>
+                            <td>
+                                <span
+                                    class="badge
+                                    
+                                      @if ($item->statusBy['name'] == 'Deposited') bg-label-primary @endif 
+                                      @if ($item->statusBy['name'] == 'Income from loan') bg-label-success @endif 
+                                      @if ($item->statusBy['name'] == 'Expensive from loan') bg-label-danger @endif 
+                                      @if ($item->statusBy['name'] == 'Other Expensive') bg-label-warning @endif 
+                                    ">{{ $item->statusBy['name'] }}</span>
+
+
+                            </td>
                             <td>{{ $item->created_at }}</td>
                         </tr>
                     @endforeach
@@ -40,7 +53,7 @@
             <div class="mt-10">
                 Total Deposit Amount : {{ $total }}
             </div>
-           
+
         </div>
 
 

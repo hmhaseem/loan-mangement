@@ -14,12 +14,18 @@ class Accounts extends Model
         'payment_amount',
         'created_by_id',
         'created_at',
-        'remarks',  
+        'status',
+        'remarks',
         'updated_at'
     ];
 
     public function created_by()
     {
         return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    public function statusBy()
+    {
+        return $this->belongsTo(Status::class, 'status');
     }
 }

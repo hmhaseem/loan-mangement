@@ -160,3 +160,8 @@ div#basicData {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
+
+.menu:not(.menu-no-animation) .menu-link > :not(.menu-icon) {
+    transition: opacity 0.3s ease-in-out;
+    font-size: 14px !important;
+}
