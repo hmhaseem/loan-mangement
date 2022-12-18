@@ -8,11 +8,12 @@ use App\Traits\MultiTenantModelTrait;
 
 class Accounts extends Model
 {
-    use  MultiTenantModelTrait, Auditable;
+    use  MultiTenantModelTrait;
     public $table = 'accounts';
     protected $fillable = [
         'payment_amount',
         'created_by_id',
+        'expensive_type',
         'created_at',
         'status',
         'remarks',
@@ -22,6 +23,11 @@ class Accounts extends Model
     public function created_by()
     {
         return $this->belongsTo(User::class, 'created_by_id');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(ExpensiveType::class, 'expensive_type');
     }
 
     public function statusBy()

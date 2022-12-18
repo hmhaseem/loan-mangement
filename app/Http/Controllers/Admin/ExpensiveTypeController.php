@@ -19,37 +19,33 @@ use App\IncomeType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Accounts;
+use App\ExpensiveType;
 
-class ExpensivTypeController extends Controller
+class ExpensiveTypeController extends Controller
 {
     public function index()
     {
         abort_if(Gate::denies('expensive_type_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $accounts = Accounts::get();
-        $total = 0;
-        foreach ($accounts as $amount) {
-            $total += $amount->payment_amount;
-        }
-        return view('admin.expensive-type.index', compact('total', 'accounts'));
+        $expensiveType = ExpensiveType::all();
+        return view('admin.expensive-type.index', compact('expensiveType'));
     }
 
     public function create()
     {
-       abort_if(Gate::denies('expensive_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('expensive_type_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('admin.expensive-type.create');
     }
-  
 
-    public function store(StoreCustomerApplicationRequest $request)
+
+    public function store(Request $request)
     {
 
         $requestData = $request->all();
-        Accounts::create($requestData);
+        ExpensiveType::create($requestData);
         return redirect()->route('admin.expensive-type.index');
     }
 
-    public function edit(CustomerApplication $customerApplication)
+    public function edit(ExpensiveType $expensiveType)
     {
         abort_if(
             Gate::denies('loan_application_edit'),
@@ -57,36 +53,25 @@ class ExpensivTypeController extends Controller
             '403 Forbidden'
         );
 
-        $loanTypes = InterestType::all();
-        $incomeTypes = IncomeType::all();
-        $loarnTerms = [];
-        for ($i = 1; $i <= 48; $i++) {
-            $loarnTerms[$i] = $i;
-        }
-        $statuses = Status::whereIn('id', [1, 8, 9])->pluck('name', 'id');
 
-        $customerApplication->load('status', 'bank');
 
-        return view('admin.expensive-type.edit', compact('statuses', 'customerApplication', 'loanTypes', 'incomeTypes', 'loarnTerms'));
+        return view('admin.expensive-type.edit', compact('expensiveType'));
     }
 
-    public function update(StoreCustomerApplicationRequest $request, CustomerApplication $customerApplication)
+    public function update(Request $request, ExpensiveType $expensiveType)
     {
-        $customerApplication->update($request->all());
+        $expensiveType->update($request->all());
 
         return redirect()->route('admin.expensive-type.index');
     }
 
-    public function show(CustomerApplication $customerApplication)
+    public function show(ExpensiveType $expensiveType)
     {
-        abort_if(Gate::denies('loan_application_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('expensive_type_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $customerApplication->load('status', 'analyst', 'cfo', 'created_by', 'logs.user', 'comments');
-        $defaultStatus = Status::find(1);
-        $user          = auth()->user();
         //  $logs          = AuditLogService::generateLogs($customerApplication);
 
-        return view('admin.expensive-type.show', compact('loanApplication', 'defaultStatus', 'user', 'logs'));
+        return view('admin.expensive-type.show', compact('expensiveType'));
     }
 
     public function destroy(CustomerApplication $loanApplication)

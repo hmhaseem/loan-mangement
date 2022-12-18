@@ -46,14 +46,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     //Accounts
     Route::resource('accounts', 'AccountsController');
-
+    Route::get('accounts-history', 'AccountsController@history')->name('accounts.history');
 
     //Expensive
-    Route::resource('accounts/expensive', 'ExpensiveController');
+    Route::resource('expensive', 'ExpensiveController');
 
 
     // Expensive Type
-    Route::resource('accounts/expensive/type', 'ExpensiveTypeController');
+    Route::resource('expensive-type', 'ExpensiveTypeController');
 
     //Payment
     Route::resource('payments', 'PaymentsController');

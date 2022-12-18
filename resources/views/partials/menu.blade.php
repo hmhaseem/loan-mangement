@@ -103,21 +103,50 @@
         @can('payments_access')
             <li
                 class="menu-item {{ request()->is('admin/payments') || request()->is('admin/payments/*') ? 'active' : '' }}">
-                <a href="{{ route('admin.payments.index') }}" class="menu-link ">
+                <a href="{{ route('admin.payments.index') }}" class="menu-link">
                     <i class="menu-icon tf-icons bx bx-money"></i>
                     <div data-i18n="Analytics"> Payment Managment</div>
                 </a>
             </li>
         @endcan
 
-        @can('account_access')
+        @can('accounts_access')
             <li
-                class="menu-item {{ request()->is('admin/accounts') || request()->is('admin/accounts/*') ? 'active' : '' }}">
-                <a href="{{ route('admin.accounts.index') }}" class="menu-link ">
-
+                class="menu-item {{ ((request()->is('admin/accounts') || request()->is('admin/accounts') ? 'active open' : '' || request()->is('admin/expensive-type')) ? 'active open' : '' || request()->is('admin/expensive') ? 'active open' : '' || request()->is('admin/accounts-history')) ? 'active open' : '' }}">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class='menu-icon tf-icons bx bxs-bank'></i>
-                    <div data-i18n="Analytics"> Account Managment</div>
+                    <div data-i18n="Analytics">Account Managment</div>
                 </a>
+                <ul class="menu-sub">
+                    <li
+                        class="menu-item {{ request()->is('admin/accounts-history') || request()->is('admin/accounts-history/') ? 'active ' : '' }}">
+                        <a href="{{ route('admin.accounts.history') }}" class="menu-link ">
+                            <div data-i18n="Analytics">Account Details</div>
+                        </a>
+                    </li>
+                    <li
+                        class="menu-item {{ request()->is('admin/accounts') || request()->is('admin/accounts') ? 'active' : '' }}">
+                        <a href="{{ route('admin.accounts.index') }}" class="menu-link ">
+                            <div data-i18n="Analytics">Deposit</div>
+                        </a>
+                    </li>
+                    <li
+                        class="menu-item {{ request()->is('admin/expensive-type') || request()->is('admin/expensive-type/*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.expensive-type.index') }}" class="menu-link ">
+                            <div data-i18n="Without menu"> Expensive type</div>
+                        </a>
+                    </li>
+                    @can('expensive_access')
+                    <li
+                        class="menu-item {{ request()->is('admin/expensive') || request()->is('admin/expensive/*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.expensive.index') }}" class="menu-link ">
+                            <div data-i18n="Without menu"> Expensives</div>
+                        </a>
+                    </li>
+                    @endcan
+                  
+
+                </ul>
             </li>
         @endcan
 

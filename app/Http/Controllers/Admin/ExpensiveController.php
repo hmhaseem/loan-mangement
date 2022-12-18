@@ -12,67 +12,66 @@ use App\Http\Requests\StoreCustomerApplicationRequest;
 use App\Role;
 use App\Services\AuditLogService;
 use App\Status;
-use App\InterestType;
+use App\Accounts;
 use Bugsnag\DateTime\Date;
 use Gate;
 use App\IncomeType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Accounts;
+
+use App\ExpensiveType;
 
 class ExpensiveController extends Controller
 {
     public function index()
     {
         abort_if(Gate::denies('expensive_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $accounts = Accounts::get();
-        $total = 0;
-        foreach ($accounts as $amount) {
-            $total += $amount->payment_amount;
-        }
-        return view('admin.expensive.index', compact('total', 'accounts'));
+        $expensive = Accounts::where('status', '=', '14')->get();
+
+        return view('admin.expensive.index', compact('expensive'));
     }
 
     public function create()
     {
-       abort_if(Gate::denies('expensive_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return view('admin.expensive.create');
+        abort_if(Gate::denies('expensive_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $expensiveType =  ExpensiveType::get();
+        return view('admin.expensive.create', compact('expensiveType'));
     }
-  
+
 
     public function store(StoreCustomerApplicationRequest $request)
     {
 
         $requestData = $request->all();
+        $requestData['status'] = 14;
         Accounts::create($requestData);
         return redirect()->route('admin.expensive.index');
     }
 
-    public function edit(CustomerApplication $customerApplication)
+    public function edit($id)
     {
         abort_if(
-            Gate::denies('loan_application_edit'),
+            Gate::denies('expensive_edit'),
             Response::HTTP_FORBIDDEN,
             '403 Forbidden'
         );
+ 
+         
 
-        $loanTypes = InterestType::all();
-        $incomeTypes = IncomeType::all();
-        $loarnTerms = [];
-        for ($i = 1; $i <= 48; $i++) {
-            $loarnTerms[$i] = $i;
-        }
-        $statuses = Status::whereIn('id', [1, 8, 9])->pluck('name', 'id');
 
-        $customerApplication->load('status', 'bank');
+        $expensiveType = ExpensiveType::get();
+        $accounts =  Accounts::where('id', '=', $id)->first();
 
-        return view('admin.expensive.edit', compact('statuses', 'customerApplication', 'loanTypes', 'incomeTypes', 'loarnTerms'));
+
+
+        return view('admin.expensive.edit', compact('accounts', 'expensiveType'));
     }
 
-    public function update(StoreCustomerApplicationRequest $request, CustomerApplication $customerApplication)
+    public function update(Request $request, $id)
     {
-        $customerApplication->update($request->all());
+        $accounts =  Accounts::where('id', '=', $id)->first();
+        $accounts->update($request->all());
 
         return redirect()->route('admin.expensive.index');
     }

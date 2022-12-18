@@ -21,8 +21,9 @@
                     <th>Amount</th>
                     <th>Remarks</th>
                     <th>Auth name</th>
-                    <th>Status </th>
+
                     <th>Date</th>
+                    <th>Action</th>
 
                 </thead>
                 <tbody>
@@ -32,27 +33,36 @@
                             <td>{{ $item->payment_amount }}</td>
                             <td>{{ $item->remarks }}</td>
                             <td>{{ $item->created_by['name'] }}</td>
-                            <td>
-                                <span
-                                    class="badge
-                                    
-                                      @if ($item->statusBy['name'] == 'Deposited') bg-label-primary @endif 
-                                      @if ($item->statusBy['name'] == 'Income from loan') bg-label-success @endif 
-                                      @if ($item->statusBy['name'] == 'Expensive from loan') bg-label-danger @endif 
-                                      @if ($item->statusBy['name'] == 'Other Expensive') bg-label-warning @endif 
-                                    ">{{ $item->statusBy['name'] }}</span>
-
-
-                            </td>
                             <td>{{ $item->created_at }}</td>
+                            <td>
+                                @can('accounts_show')
+                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.accounts.show', $item->id) }}">
+                                        {{ trans('global.view') }}
+                                    </a>
+                                @endcan
+
+                                @can('accounts_edit')
+                                    <a class="btn btn-xs btn-info" href="{{ route('admin.accounts.edit', $item->id) }}">
+                                        {{ trans('global.edit') }}
+                                    </a>
+                                @endcan
+
+                                @can('accounts_delete')
+                                    <form action="{{ route('admin.accounts.destroy', $item->id) }}" method="POST"
+                                        onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
+                                        style="display: inline-block;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="submit" class="btn btn-xs btn-danger"
+                                            value="{{ trans('global.delete') }}">
+                                    </form>
+                                @endcan
                         </tr>
                     @endforeach
 
                 </tbody>
             </table>
-            <div class="mt-10">
-                Total Deposit Amount : {{ $total }}
-            </div>
+
 
         </div>
 

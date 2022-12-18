@@ -25,13 +25,24 @@ class AccountsController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('account_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('accounts_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $accounts = Accounts::with('statusBy')->get();
         $total = 0;
         foreach ($accounts as $amount) {
             $total += $amount->payment_amount;
         }
         return view('admin.accounts.index', compact('total', 'accounts'));
+    }
+
+    public function history()
+    {
+        abort_if(Gate::denies('account_history_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $accounts = Accounts::with('statusBy')->get();
+        $total = 0;
+        foreach ($accounts as $amount) {
+            $total += $amount->payment_amount;
+        }
+        return view('admin.accounts.history', compact('total', 'accounts'));
     }
 
     public function create()

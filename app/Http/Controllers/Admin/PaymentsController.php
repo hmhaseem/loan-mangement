@@ -10,7 +10,7 @@ use App\Http\Requests\StoreLoanApplicationRequest;
 use App\Http\Requests\UpdateLoanApplicationRequest;
 use App\LoanApplication;
 use App\CustomerApplication;
-use App\Role;
+use App\Accounts;
 use App\Services\AuditLogService;
 use App\Status;
 use App\InterestType;
@@ -70,9 +70,14 @@ class PaymentsController extends Controller
                 ]);
             }
             if ($balance) {
-
+                $user = auth()->user();
                 $payments = Payments::create($requestData);
+                $data['payment_amount'] = $requestData['payment_amount'];
+                $data['created_by_id'] = $user->id;
+                $data['remarks'] = "Autogenarated remakrs";
+                $data['status'] = 12;
 
+                Accounts::create($data);
                 return redirect()->back()->with('success', 'Payment Added !');
             } else {
                 // $payments = Payments::create($requestData);
@@ -168,7 +173,7 @@ class PaymentsController extends Controller
     {
         abort_if(Gate::denies('payments_history'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $loan =   LoanApplication::whereId($id)->with('payments', 'customer')->get();
-       
+
         return view('admin.payments.history', compact('loan'));
     }
 }

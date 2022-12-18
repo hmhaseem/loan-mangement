@@ -16,6 +16,7 @@ use App\InterestType;
 use Bugsnag\DateTime\Date;
 use Gate;
 use App\IncomeType;
+use App\Accounts;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -168,6 +169,7 @@ class LoanApplicationsController extends Controller
             'status_id' => $status
         ]);
 
+
         return redirect()->route('admin.loan-applications.index')->with('message', 'Loan application has been sent for Operation Manager');
     }
 
@@ -203,18 +205,22 @@ class LoanApplicationsController extends Controller
             abort(Response::HTTP_FORBIDDEN, '403 Forbidden');
         }
 
-        $request->validate([
-            'comment_text' => 'required'
-        ]);
 
-        $loanApplication->comments()->create([
-            'comment_text' => $request->comment_text,
-            'user_id'      => $user->id
-        ]);
+
 
         $loanApplication->update([
             'status_id' => $status
         ]);
+
+
+
+        $data['payment_amount'] = $loanApplication->loan_amount;
+        $data['created_by_id'] = $user->id;
+        $data['remarks'] = "Autogenarated remakrs";
+        $data['status'] = 13;
+
+        Accounts::create($data);
+
 
         return redirect()->route('admin.loan-applications.index')->with('message', 'Analysis has been submitted');
     }
