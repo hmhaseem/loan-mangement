@@ -22,6 +22,9 @@
                                     {{ $errors->first('loan_amount') }}
                                 </div>
                             @endif
+
+                            <input type="hidden" value="{{$chargers->insurance_charge}}" name="insurance_charge" id="insurance_charge">
+                                <input type="hidden" value="{{$chargers->document_charge}}" name="document_charge" id="document_charge">
                         </div>
 
                         <div class="col-sm-6">
@@ -29,9 +32,9 @@
                             <select name="term_type" class="form-control select2" id="term_type">
                                 <option value="0">Select Type </option>
                                 @foreach ($loanTypes as $loanTypes)
-                                    <option value="{{ $loanTypes->product_name }}"
+                                 <option value="{{ $loanTypes->product_name }}"
                                         data-interest="{{ $loanTypes->interest_rate }}"
-                                        @if ($loanApplication->term_type) selected @endif>
+                                        @if ($loanApplication->term_type == $loanTypes->product_name) selected @endif>
                                         {{ $loanTypes->product_name }} </option>
                                 @endforeach
                             </select>
@@ -47,7 +50,7 @@
                             <select name="loan_term" class="form-control select2" id="loan_term">
                                 <option value="0">Select Term </option>
                                 @foreach ($loarnTerms as $term)
-                                    <option value="{{ $term }}" @if ($loanApplication->loan_term) selected @endif>
+                                    <option value="{{ $term }}" @if ($loanApplication->loan_term == $term) selected @endif>
                                         {{ $term }}
                                     </option>
                                 @endforeach
@@ -142,8 +145,10 @@
             function getCalculate() {
                 let interest = $('#term_type').find('option').filter(':selected').data('interest');
                 let term = $('#loan_term').find('option').filter(':selected').text();
+                let insurance_charge = $('#insurance_charge').val();
+                let document_charge = $('#document_charge').val();
                 let intrestRate = loanAmount * (interest / 100) * term;
-                let totalAmount = (+loanAmount + +intrestRate);
+                let totalAmount = (+loanAmount + +intrestRate + +insurance_charge + +document_charge);
                 let weeklyPay = totalAmount / term;
                 $("#interest").val(intrestRate.toFixed(2));
                 $('#total_amount').val(totalAmount.toFixed(2));

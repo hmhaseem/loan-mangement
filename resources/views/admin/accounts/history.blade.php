@@ -2,7 +2,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            Account Managment
+            Account History Managment
         </div>
         @if (Session::has('success'))
             <div class="alert alert-success" role="alert">

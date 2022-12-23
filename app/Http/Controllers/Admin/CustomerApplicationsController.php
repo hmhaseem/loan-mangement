@@ -8,6 +8,7 @@ use App\Http\Requests\MassDestroyLoanApplicationRequest;
 use App\Http\Requests\StoreLoanApplicationRequest;
 use App\Http\Requests\UpdateLoanApplicationRequest;
 use App\CustomerApplication;
+use App\LoanApplication;
 use App\Http\Requests\StoreCustomerApplicationRequest;
 use App\Role;
 use App\Services\AuditLogService;
@@ -103,8 +104,24 @@ class CustomerApplicationsController extends Controller
 
     public function update(StoreCustomerApplicationRequest $request, CustomerApplication $customerApplication)
     {
-        $customerApplication->update($request->all());
+          $requestData = $request->all();
+        if ($request->hasFile('nic_photo')) {
+            $randomize = rand(111111, 999999);
+            $extension = $request->file('nic_photo')->getClientOriginalExtension();
+            $filenameFront = $randomize . '.' . $extension;
+            $request->nic_photo->move('public/uploads/', $filenameFront);
+            $requestData['nic_photo'] = $filenameFront;
+        }
 
+        if ($request->hasFile('nic_back')) {
+            $randomize = rand(111111, 999999);
+            $extension = $request->file('nic_back')->getClientOriginalExtension();
+            $filenameBackEnd = $randomize . '.' . $extension;
+            $request->nic_back->move('public/uploads/', $filenameBackEnd);
+            $requestData['nic_back'] = $filenameBackEnd;
+        }
+        $customerApplication->update($requestData);
+       
         return redirect()->route('admin.customer-applications.index');
     }
 
@@ -120,13 +137,14 @@ class CustomerApplicationsController extends Controller
         return view('admin.loanApplications.show', compact('loanApplication', 'defaultStatus', 'user', 'logs'));
     }
 
-    public function destroy(CustomerApplication $loanApplication)
+    public function destroy(CustomerApplication $customerApplication)
     {
-        abort_if(Gate::denies('loan_application_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('customer_application_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        //LoanAppliation::where('customer.id', '=',$customerApplication->id)->f
+       // dd($LoanApplication);
+        $customerApplication->delete();
 
-        $loanApplication->delete();
-
-        return back();
+        return redirect()->route('admin.customer-applications.index')->with('message', 'Customer is deleted succesfuly');
     }
 
     public function massDestroy(MassDestroyLoanApplicationRequest $request)

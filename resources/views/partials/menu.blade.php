@@ -115,13 +115,13 @@
                 class="menu-item {{ ((request()->is('admin/accounts') || request()->is('admin/accounts') ? 'active open' : '' || request()->is('admin/expensive-type')) ? 'active open' : '' || request()->is('admin/expensive') ? 'active open' : '' || request()->is('admin/accounts-history')) ? 'active open' : '' }}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                     <i class='menu-icon tf-icons bx bxs-bank'></i>
-                    <div data-i18n="Analytics">Account Managment</div>
+                    <div data-i18n="Analytics">Accounts Managment</div>
                 </a>
                 <ul class="menu-sub">
                     <li
                         class="menu-item {{ request()->is('admin/accounts-history') || request()->is('admin/accounts-history/') ? 'active ' : '' }}">
                         <a href="{{ route('admin.accounts.history') }}" class="menu-link ">
-                            <div data-i18n="Analytics">Account Details</div>
+                            <div data-i18n="Analytics">Account History</div>
                         </a>
                     </li>
                     <li

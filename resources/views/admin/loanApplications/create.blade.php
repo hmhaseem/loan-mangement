@@ -170,6 +170,8 @@
 
 
                                 <input type="hidden" value="" name="customer_id" id="customer_id">
+                                <input type="hidden" value="" name="insurance_charge" id="insurance_charge">
+                                <input type="hidden" value="" name="document_charge" id="document_charge">
                             </div>
 
                             <div class="col-sm-6">
@@ -310,8 +312,10 @@
             function getCalculate() {
                 let interest = $('#term_type').find('option').filter(':selected').data('interest');
                 let term = $('#loan_term').find('option').filter(':selected').text();
+                const insurance_charge=$('#insurance_charge').val();
+                const document_charge=$('#document_charge').val();
                 let intrestRate = loanAmount * (interest / 100) * term;
-                let totalAmount = (+loanAmount + +intrestRate);
+                let totalAmount = (+loanAmount + +intrestRate + +insurance_charge + +document_charge);
                 let weeklyPay = totalAmount / term;
                 $("#interest").val(intrestRate.toFixed(2));
                 $('#total_amount').val(totalAmount.toFixed(2));
@@ -379,8 +383,9 @@
                         $("#income").text(resultData.income_amount);
                         $("#expenses").text(resultData.expenses);
                         $("#customer_id").val(resultData.id);
-
-
+                        $("#insurance_charge").val(dataResult.charges.insurance_charge);
+                        $("#document_charge").val(dataResult.charges.document_charge);
+                   
                     } else {
                         $(".no-result").show();
                         $("#basicData").fadeOut();

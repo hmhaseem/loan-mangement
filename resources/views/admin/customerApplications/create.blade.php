@@ -418,7 +418,7 @@
                             file: {
                                 extension: 'jpeg,gif,png,jpg',
                                 type: 'image/jpeg,image/gif,image/png,image/jpg',
-                                message: 'Please choose a jpeg/png/gif file format',
+                                message: 'Please choose a jpeg/png/gif/jpg file format',
                             },
                             notEmpty: {
                                 message: 'The nic front image is required'

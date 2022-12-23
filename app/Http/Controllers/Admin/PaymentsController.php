@@ -57,24 +57,25 @@ class PaymentsController extends Controller
         $requestData = $request->all();
         $loanApplication = $request['loan_id'];
 
-        $loan =   LoanApplication::whereId($loanApplication)->with('payments')->first();
+        $loan =   LoanApplication::whereId($loanApplication)->with('payments','customer')->first();
         if ($loan) {
             $total = 0;
             foreach ($loan->payments as $payment) {
                 $total += $payment->payment_amount;
             }
             $balance = $loan->loan_amount - $total;
+            
             if ($balance == 0 && $balance) {
                 $loan->update([
                     'status_id' => 10
                 ]);
             }
-            if ($balance) {
+            if ($balance==0) {
                 $user = auth()->user();
                 $payments = Payments::create($requestData);
                 $data['payment_amount'] = $requestData['payment_amount'];
                 $data['created_by_id'] = $user->id;
-                $data['remarks'] = "Autogenarated remakrs";
+                $data['remarks'] = " Customer Name : "+$loan->customer->name+" NIC : " +$loan->customer->nic;
                 $data['status'] = 12;
 
                 Accounts::create($data);
@@ -120,7 +121,7 @@ class PaymentsController extends Controller
     public function show($loanApplication)
     {
         abort_if(Gate::denies('payments_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $loan =   LoanApplication::whereId($loanApplication)->with('payments')->first();
+        $loan =   LoanApplication::whereId($loanApplication)->with('payments','customer')->first();
         $charges = Charges::first();
         // dd($charges->insurance_charge);
         //  document_charge
@@ -154,16 +155,18 @@ class PaymentsController extends Controller
         $nic = $request['nic'];
         //   $customerDetails = CustomerApplication::where('nic', '=', $nic)->bank()->get();
         $customerDetails = CustomerApplication::where('customer_applications.nic', '=', $nic)
-            ->rightJoin('bank', 'bank.id', '=', 'customer_applications.bank_id')
-            ->rightJoin('loan_applications', 'loan_applications.id', '=', 'loan_applications.customer_id')
-            ->rightJoin('payments', 'loan_applications.id', '=', 'payments.loan_id')
-            ->select('customer_applications.*', 'loan_applications.*', 'loan_applications.id as loanId', DB::raw("group_concat(payments.payment_amount) as paymentList"), 'bank.name as bank_name', 'bank.account_no as bank_account_no', 'bank.remarks as remarks', 'bank.branch as branch')
-            ->first()->toArray();
+         //     ->rightJoin('loan_applications', 'customer_applications.id', '=', 'loan_applications.customer_id')
+        //    //  ->rightJoin('payments', 'loan_applications.id', '=', 'payments.loan_id')
+        //  //  ->select('loan_applications.*','customer_applications.id as customerId', DB::raw("group_concat(payments.payment_amount) as paymentList"))
+        //  ->select('loan_applications.*','customer_applications.id as customerId')
+        ->first();
+      
 
         $charges = Charges::first();
 
         if (!is_null($customerDetails['id'])) {
-            return response()->json(array('data' => $customerDetails, 'chargers' => $charges, 'message' => 'retrived list', 'status' => 'true'), 200);
+             $data=  LoanApplication::whereCustomerId($customerDetails['id'])->with('payments', 'customer')->first();
+            return response()->json(array('data' => $data, 'chargers' => $charges, 'message' => 'retrived list', 'status' => 'true'), 200);
         } else {
             return response()->json(array('data' => [], 'status' => 'false'), 200);
         }
